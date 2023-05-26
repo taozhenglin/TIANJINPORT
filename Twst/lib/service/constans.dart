@@ -1,0 +1,47 @@
+class Constants {
+  static bool ISDEBUG = true;
+  static String LOGIN = "Login";
+  static String READ = "READ";
+  static int START_PAGE = 1;
+  static int END_PAGE = START_PAGE * 10;
+  static String CODE_OK = "1";
+  static String LOGIN_USERNAME_DESC = "请输入用户名";
+  static String LOGIN_PASSWORD_DESC = "请输入密码";
+  static String REGULAR_SIZE = "常规";
+  static String SMALL_SIZE = "小";
+  static String LARGE_SIZE = "大";
+  static String BIGEST_SIZE = "超大";
+  static String PERSONAL_CENTER = "个人中心";
+  static String VERSION_CODE = "版本号";
+  static String WAIT_DO = "版本号";
+  static String TEXT_FONT_SIZE = "字体大小";
+  static String VERSION_HISTORY = "更新记录";
+  static String NO_DATA = "暂无数据";
+  static String NO_MORE_DATA = "没有更多数据了";
+  static String LOADING = "登陆中...";
+  static String LOGIN_OUT = "退出登录";
+  static String SWEEP = "扫一扫";
+  static String CLEAN_SP = "清除缓存";
+  static String CASH_CLEANED = "缓存已清除";
+  static String APPBAR_FUNCTION = "首 页";
+  static String GSJ_TEMPORARY_PLAN = "工属具临时计划";
+  static String GSJ_BORROW_BACK = "工属具借用归还";
+  static String GSL_LIST_TITLE = "工属具列表";
+  static String GSJ_LIST_HINT = "请输入工属具编号/描述";
+  static String DETAIL = "详情";
+  static String GSJ_BORROW = "工属具借用";
+  static String GSJ_BACK = "工属具归还";
+  static String NO = "单号：";
+  static String DESC = "描述：";
+  static String COMPANY_DESC = "公司简称：";
+  static String TAKE_PHOTO = "拍照";
+  static String STOREHOUSE = "仓库：";
+  static String CREATED_BY = "创建人：";
+  static String CREATED_DEPT = "创建部门：";
+  static String STATUE_DATE = "状态日期：";
+  static String LOCATION = "地点：";
+  static bool ISNETWORKAVAILABLE = true;
+
+  static String GSJ_LIST = "1001";
+  static String TASK_LIST = "1005";
+}
