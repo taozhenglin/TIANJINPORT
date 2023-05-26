@@ -50,6 +50,9 @@ class GsjDetailBackPageState extends State<GsjDetailBackPage> {
                               end: Alignment.topCenter),
                         ),
                         child: GestureDetector(
+                          onLongPress: () {
+                            print('长按删除');
+                          },
                           onTap: () {
                             LogD('点击了${index}');
                             Navigator.pushNamed(context, '/test');
