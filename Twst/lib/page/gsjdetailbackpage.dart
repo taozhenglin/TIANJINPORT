@@ -51,7 +51,7 @@ class GsjDetailBackPageState extends State<GsjDetailBackPage> {
                         ),
                         child: GestureDetector(
                           onLongPress: () {
-                            print('长按删除');
+                            print('长按删除工属具返回列表。。。');
                           },
                           onTap: () {
                             LogD('点击了${index}');
