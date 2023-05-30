@@ -146,7 +146,10 @@ class GsjGridViewPage extends State<GsjGridView> {
                     imagecolor: ColorUtils.getRandomColor(),
                     onPressed: () {
                       LogD('${index}');
-                      Navigator.pushNamed(context, '/gsjtemporaryplanlist');
+                      if (datas[index].title == "工属具发放归还") {
+                        Navigator.pushNamed(context, '/gsjtemporaryplanlist');
+                      }
+
                       // Navigator.pushNamed(context, datas[index].route);
                     },
                     textSize: TextSizeConfig.size16,

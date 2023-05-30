@@ -113,6 +113,10 @@ flutter:
   - images/month_check.png
   - images/app_bg.jpg
   - images/nonet.png
+  - images/canceled.png
+  - images/finished.png
+  - images/reject.png
+  - images/permited.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

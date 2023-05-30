@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:twst/view/commontextform.dart';
+import 'package:twst/base/baselistfragment.dart';
+import 'package:twst/base/baselistpage.dart';
 
-import '../base/baselistfragment.dart';
 import '../config/textsize.dart';
 import '../service/constans.dart';
 import '../service/dioclent.dart';
@@ -11,56 +11,61 @@ import '../tools/datautil.dart';
 import '../tools/dialogutil.dart';
 import '../tools/logutils.dart';
 import '../view/common_imagetext_item.dart';
-import '../view/commontoprighttag.dart';
+import '../view/commontextform.dart';
 
-class GsjDetailBorrowPage extends BaseListFragment {
-  final num;
-  GsjDetailBorrowPage({Key? key, required this.num});
-
+class GsjCjLineListPage extends BaseListPage {
+  final arguments;
+  GsjCjLineListPage({Key? key, required this.arguments});
   @override
-  BaseListFragmentState createState() {
+  BaseListPageState createState() {
     // TODO: implement createState
-    return GsjDetailBorrowPageState(num);
+    return GsjCjLineListPageState(arguments);
   }
 }
 
-class GsjDetailBorrowPageState extends BaseListFragmentState {
+class GsjCjLineListPageState extends BaseListPageState {
   List agencyList = [];
+  // late String num;
+  // late String cjnum;
   late String name;
-  late String num;
-  GsjDetailBorrowPageState(this.num);
-  @override
-  void onRefresh() {
-    // TODO: implement onRefresh
-    super.onRefresh();
-    getGsjList(true);
-  }
-
-  @override
-  void onLoading() {
-    // TODO: implement onLoading
-    super.onLoading();
-    getGsjList(false);
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    LogD('num=${num}');
-    Future.delayed(Duration(microseconds: 300), () {
-      getGsjList(true);
-    });
-  }
+  final arguments;
+  GsjCjLineListPageState(this.arguments);
 
   @override
   Future<void> initData() async {
     // TODO: implement initData
     super.initData();
     name = await DataUtils.getString("loginname");
+    title = "承接明细";
+    showSearchBar = false;
   }
 
-  Future<void> getGsjList(bool isrefresh) async {
+  @override
+  void onRefresh() {
+    // TODO: implement onRefresh
+    super.onRefresh();
+    getCjLineList(true);
+  }
+
+  @override
+  void onLoading() {
+    // TODO: implement onLoading
+    super.onLoading();
+    getCjLineList(false);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    LogD('num==${arguments['num']}');
+    LogD('cjnum==${arguments['cjnum']}');
+    Future.delayed(Duration(microseconds: 300), () {
+      getCjLineList(true);
+    });
+  }
+
+  Future<void> getCjLineList(bool isrefresh) async {
     DiaLogUtil.show(context, Colors.black12, "加载中...");
     LogD('getGsjList ${isrefresh} ');
     if (isrefresh) {
@@ -69,10 +74,10 @@ class GsjDetailBorrowPageState extends BaseListFragmentState {
     }
     String option = Constants.READ;
     Map json = {
-      "keyNum": Constants.GSJ_BORROW_BACK_LIST,
-      "sqlWhere": " and UDINVUSENUM='${num}' and USETYPE='UDJY' ",
+      "keyNum": Constants.GSJ_CJ_LINE_LIST,
+      "sqlWhere":
+          " and UDINVUSENUM='${arguments['num']}' and UDJYCJNUM='${arguments['cjnum']}'",
       "sinorSearch": '',
-      "keysearch": "keyValue:1",
       "startRow": startPage,
       "endRow": endPage
     };
@@ -144,10 +149,12 @@ class GsjDetailBorrowPageState extends BaseListFragmentState {
                 elevation: 3,
                 child: InkWell(
                   onTap: () {
-                    Navigator.of(context).pushNamed('/gsj_temporary_plan',
-                        arguments: {"data": agencyList[index]});
+                    // Navigator.of(context).pushNamed('/gsj_temporary_plan',
+                    //     arguments: {"data": agencyList[index]});
                   },
-                  onLongPress: () {},
+                  onLongPress: () {
+                    // EasyLoading.showToast(agencyList[index]["description"]);
+                  },
                   child: Padding(
                     padding: EdgeInsets.all(10),
                     child: Column(
@@ -156,10 +163,10 @@ class GsjDetailBorrowPageState extends BaseListFragmentState {
                       children: [
                         //行号
                         CommonTextForm(
-                            title: Constants.LINE_NO,
+                            title: Constants.CJ_NUM,
                             titlecolor: Colors.black,
                             titleSize: TextSizeConfig.size16,
-                            content: agencyList[index]["udinvuselinenum"],
+                            content: agencyList[index]["udjycjnum"],
                             contentcolor: Colors.black,
                             contentSize: TextSizeConfig.size16),
                         //编码
@@ -205,23 +212,15 @@ class GsjDetailBorrowPageState extends BaseListFragmentState {
                             contentcolor: Colors.black,
                             contentSize: TextSizeConfig.size16),
 
-                        //借用数量
+                        //承接数量
                         CommonTextForm(
-                            title: Constants.BORROW_COUNT,
+                            title: Constants.CJ_COUNT,
                             titlecolor: Colors.black,
                             titleSize: TextSizeConfig.size16,
-                            content: agencyList[index]["quantity"],
+                            content: agencyList[index]["cjquantity"],
                             contentcolor: Colors.black,
                             contentSize: TextSizeConfig.size16),
 
-                        //发放单位
-                        CommonTextForm(
-                            title: Constants.FF_DEPT,
-                            titlecolor: Colors.black,
-                            titleSize: TextSizeConfig.size16,
-                            content: agencyList[index]["uddw"],
-                            contentcolor: Colors.black,
-                            contentSize: TextSizeConfig.size16),
                         //单位成本
                         CommonTextForm(
                             title: Constants.UNIT_COST,
@@ -239,27 +238,27 @@ class GsjDetailBorrowPageState extends BaseListFragmentState {
                             content: agencyList[index]["linecost"],
                             contentcolor: Colors.black,
                             contentSize: TextSizeConfig.size16),
-                        //创建日期
-                        // CommonImageTextItem(
-                        //     icon: Icons.access_time,
-                        //     text: agencyList[index]["requesteddate"],
-                        //     textcolor: Colors.black45,
-                        //     imagecolor: Colors.orange,
-                        //     onPressed: () {},
-                        //     textSize: TextSizeConfig.size16,
-                        //     imageSize: 18),
+                        //承接日期
+                        CommonImageTextItem(
+                            icon: Icons.access_time,
+                            text: agencyList[index]["udcjdate"],
+                            textcolor: Colors.black45,
+                            imagecolor: Colors.orange,
+                            onPressed: () {},
+                            textSize: TextSizeConfig.size16,
+                            imageSize: 18),
                       ],
                     ),
                   ),
                 ),
               ),
-              Positioned(
-                  child: Align(
-                      alignment: Alignment.topRight,
-                      child: CommonTopRightTag(
-                        tag: agencyList[index]["status"],
-                        size: TextSizeConfig.size70,
-                      ))),
+              // Positioned(
+              //     child: Align(
+              //         alignment: Alignment.topRight,
+              //         child: CommonTopRightTag(
+              //           tag: agencyList[index]["status"],
+              //           size: TextSizeConfig.size70,
+              //         ))),
             ],
           );
         });

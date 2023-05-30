@@ -424,9 +424,7 @@ class GsjTemporaryPlanListPage extends BaseListPageState {
         }
       } else {
         DiaLogUtil.disMiss(context);
-        eventBus.fire(EventB("0"));
-        DataUtils.setString('taskcount', '0');
-        // ToastUtils.shotToast(resultMap['msg']);
+        EasyLoading.showToast(resultMap['msg']);
         setState(() {
           agencyList.clear();
           noData = true;

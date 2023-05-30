@@ -4,6 +4,7 @@ import 'package:twst/login_page.dart';
 import 'package:twst/page/homepage.dart';
 import 'package:twst/view/gsjtemporaryplanlist.dart';
 
+import '../page/gsjcjlinelistpage.dart';
 import '../view/GsjTemporaryPlanPage.dart';
 import '../view/testpage.dart';
 
@@ -15,7 +16,11 @@ final routes = {
   '/baselistpage': (context, {arguments}) => GsjTemporaryPlanList(),
   '/gsj_temporary_plan': (context, {arguments}) =>
       GsjTemporaryPlanPage(arguments: arguments),
+  '/gsj_cj_line': (context, {arguments}) => GsjCjLineListPage(
+        arguments: arguments,
+      ),
 };
+
 var onGenerateRoute = (RouteSettings settings) {
   final String? name = settings.name;
   final Function pageContentBuilder = routes[name] as Function;

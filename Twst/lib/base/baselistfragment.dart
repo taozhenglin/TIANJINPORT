@@ -1,39 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:twst/config/textsize.dart';
-import 'package:twst/tools/networkutil.dart';
-import 'package:twst/view/common_search_bar.dart';
 
 import '../service/constans.dart';
-import '../tools/dialogutil.dart';
-import '../tools/keybord.dart';
-import '../view/common_appbar.dart';
+import '../tools/networkutil.dart';
+import '../view/common_search_bar.dart';
 
-class BaseListPage extends StatefulWidget {
+class BaseListFragment extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return BaseListPageState();
+    return BaseListFragmentState();
   }
 }
 
-class BaseListPageState extends State<BaseListPage> {
-  late Widget appBarWidget; //body
-  late String title = 'qqqq';
-  late String hint = 'qqqq';
-  late double hintSize = TextSizeConfig.size14;
-  late Color hintColor = Colors.grey;
-  late IconData icon;
+class BaseListFragmentState extends State<BaseListFragment> {
   bool noData = false;
   late int startPage = Constants.START_PAGE;
   late int endPage = Constants.END_PAGE;
   late int total;
-  late String searchInput = "";
-  late bool isNetWorkAvailable = true;
-  late bool showSearchBar = true;
   @override
   void initState() {
     // TODO: implement initState
@@ -43,44 +29,13 @@ class BaseListPageState extends State<BaseListPage> {
 
   final RefreshController refreshController =
       RefreshController(initialRefresh: false);
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          title,
-          style:
-              TextStyle(fontSize: TextSizeConfig.size18, color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.of(context).pop();
-          },
-          child: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-        ),
-      ),
       body: Column(
         children: [
-          if (showSearchBar)
-            CommonSeachBar(
-                hint: hint,
-                hintSize: hintSize,
-                hintColor: hintColor,
-                icon: Icons.search,
-                onSearch: (e) {
-                  searchInput = e.toString();
-                  KeyBordUtil.hidekeybord(context);
-                  print("搜索输出=====$e");
-                  search();
-                }),
           Expanded(
             child: !Constants.ISNETWORKAVAILABLE
                 ? GestureDetector(
@@ -148,9 +103,5 @@ class BaseListPageState extends State<BaseListPage> {
     }
   }
 
-  void search() {}
-
   listbuilder() {}
 }
-
-_lead() {}

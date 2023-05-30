@@ -5,13 +5,13 @@ import 'package:twst/service/constans.dart';
 import 'package:twst/tools/logutils.dart';
 
 import '../bean/tabdatds.dart';
+import '../page/gsjcjrecordpage.dart';
 import '../page/gsjdetailbackpage.dart';
 import '../page/gsjdetailborrowpage.dart';
 import '../page/gsjdetailpage.dart';
 
 class GsjTemporaryPlanPage extends StatefulWidget {
   final arguments;
-  // const GsjTemporaryPlanPage({Key? key, this.arguments}) : super(key: key);
   const GsjTemporaryPlanPage({Key? key, required this.arguments})
       : super(key: key);
 
@@ -44,6 +44,12 @@ class GsjTemporaryPlanPageState extends State<GsjTemporaryPlanPage> {
           title: Constants.GSJ_BACK,
           route: '',
           widget: GsjDetailBackPage(
+            num: widget.arguments['data']['num'],
+          )),
+      TabData(
+          title: Constants.GSJ_CJ_RECORD,
+          route: '',
+          widget: GsjCjRecordPage(
             num: widget.arguments['data']['num'],
           )),
     ];
@@ -120,7 +126,7 @@ class GsjTemporaryPlanPageState extends State<GsjTemporaryPlanPage> {
                   child: TextButton(
                     onPressed: _approve,
                     child: Text(
-                      Constants.LOGIN_OUT,
+                      Constants.START_PROCESS,
                       style: TextStyle(
                           color: Colors.white, fontSize: TextSizeConfig.size20),
                     ),

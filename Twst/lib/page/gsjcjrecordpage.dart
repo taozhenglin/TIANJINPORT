@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:twst/view/commontextform.dart';
+import 'package:twst/base/baselistfragment.dart';
 
-import '../base/baselistfragment.dart';
 import '../config/textsize.dart';
 import '../service/constans.dart';
 import '../service/dioclent.dart';
@@ -11,24 +10,23 @@ import '../tools/datautil.dart';
 import '../tools/dialogutil.dart';
 import '../tools/logutils.dart';
 import '../view/common_imagetext_item.dart';
-import '../view/commontoprighttag.dart';
+import '../view/commontextform.dart';
 
-class GsjDetailBorrowPage extends BaseListFragment {
-  final num;
-  GsjDetailBorrowPage({Key? key, required this.num});
-
+class GsjCjRecordPage extends BaseListFragment {
+  final String num;
+  GsjCjRecordPage({Key? key, required this.num});
   @override
   BaseListFragmentState createState() {
     // TODO: implement createState
-    return GsjDetailBorrowPageState(num);
+    return GsjCjRecordPageState(num);
   }
 }
 
-class GsjDetailBorrowPageState extends BaseListFragmentState {
+class GsjCjRecordPageState extends BaseListFragmentState {
   List agencyList = [];
   late String name;
   late String num;
-  GsjDetailBorrowPageState(this.num);
+  GsjCjRecordPageState(this.num);
   @override
   void onRefresh() {
     // TODO: implement onRefresh
@@ -69,8 +67,8 @@ class GsjDetailBorrowPageState extends BaseListFragmentState {
     }
     String option = Constants.READ;
     Map json = {
-      "keyNum": Constants.GSJ_BORROW_BACK_LIST,
-      "sqlWhere": " and UDINVUSENUM='${num}' and USETYPE='UDJY' ",
+      "keyNum": Constants.GSJ_CJ_RECORD_LIST,
+      "sqlWhere": " and UDINVUSENUM='${num}' ",
       "sinorSearch": '',
       "keysearch": "keyValue:1",
       "startRow": startPage,
@@ -144,122 +142,76 @@ class GsjDetailBorrowPageState extends BaseListFragmentState {
                 elevation: 3,
                 child: InkWell(
                   onTap: () {
-                    Navigator.of(context).pushNamed('/gsj_temporary_plan',
-                        arguments: {"data": agencyList[index]});
+                    Navigator.of(context).pushNamed('/gsj_cj_line', arguments: {
+                      "num": num,
+                      "cjnum": agencyList[index]['udjycjnum']
+                    });
                   },
-                  onLongPress: () {},
+                  onLongPress: () {
+                    EasyLoading.showToast(agencyList[index]["description"]);
+                  },
                   child: Padding(
                     padding: EdgeInsets.all(10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        //行号
+                        //承接号
                         CommonTextForm(
-                            title: Constants.LINE_NO,
+                            title: Constants.CJ_NUM,
                             titlecolor: Colors.black,
                             titleSize: TextSizeConfig.size16,
-                            content: agencyList[index]["udinvuselinenum"],
+                            content: agencyList[index]["udjycjnum"],
                             contentcolor: Colors.black,
                             contentSize: TextSizeConfig.size16),
-                        //编码
+                        //承接人
                         CommonTextForm(
-                            title: Constants.GSJ_ITEM_NO,
+                            title: Constants.CJ_PERSON,
                             titlecolor: Colors.black,
                             titleSize: TextSizeConfig.size16,
-                            content: agencyList[index]["uditemnum"],
-                            contentcolor: Colors.black,
-                            contentSize: TextSizeConfig.size16),
-
-                        //描述
-                        CommonTextForm(
-                            title: Constants.DESC,
-                            titlecolor: Colors.black,
-                            titleSize: TextSizeConfig.size16,
-                            content: agencyList[index]["description"],
+                            content: agencyList[index]["udcjperson"],
                             contentcolor: Colors.black,
                             contentSize: TextSizeConfig.size16),
 
-                        //批次
+                        //承接部门
                         CommonTextForm(
-                            title: Constants.LOT_NUM,
+                            title: Constants.CJ_DEPT,
                             titlecolor: Colors.black,
                             titleSize: TextSizeConfig.size16,
-                            content: agencyList[index]["fromlot"],
-                            contentcolor: Colors.black,
-                            contentSize: TextSizeConfig.size16),
-                        //库房
-                        CommonTextForm(
-                            title: Constants.STORE_ROOM,
-                            titlecolor: Colors.black,
-                            titleSize: TextSizeConfig.size16,
-                            content: agencyList[index]["locdes"],
-                            contentcolor: Colors.black,
-                            contentSize: TextSizeConfig.size16),
-                        //货位
-                        CommonTextForm(
-                            title: Constants.PRODUCT_LOCTION,
-                            titlecolor: Colors.black,
-                            titleSize: TextSizeConfig.size16,
-                            content: agencyList[index]["binname"],
+                            content: agencyList[index]["deptno"],
                             contentcolor: Colors.black,
                             contentSize: TextSizeConfig.size16),
 
-                        //借用数量
+                        //公司
                         CommonTextForm(
-                            title: Constants.BORROW_COUNT,
+                            title: Constants.COMPANY,
                             titlecolor: Colors.black,
                             titleSize: TextSizeConfig.size16,
-                            content: agencyList[index]["quantity"],
+                            content: agencyList[index]["siteid"],
                             contentcolor: Colors.black,
                             contentSize: TextSizeConfig.size16),
 
-                        //发放单位
-                        CommonTextForm(
-                            title: Constants.FF_DEPT,
-                            titlecolor: Colors.black,
-                            titleSize: TextSizeConfig.size16,
-                            content: agencyList[index]["uddw"],
-                            contentcolor: Colors.black,
-                            contentSize: TextSizeConfig.size16),
-                        //单位成本
-                        CommonTextForm(
-                            title: Constants.UNIT_COST,
-                            titlecolor: Colors.black,
-                            titleSize: TextSizeConfig.size16,
-                            content: agencyList[index]["unitcost"],
-                            contentcolor: Colors.black,
-                            contentSize: TextSizeConfig.size16),
-
-                        //行成本
-                        CommonTextForm(
-                            title: Constants.LINE_COST,
-                            titlecolor: Colors.black,
-                            titleSize: TextSizeConfig.size16,
-                            content: agencyList[index]["linecost"],
-                            contentcolor: Colors.black,
-                            contentSize: TextSizeConfig.size16),
-                        //创建日期
-                        // CommonImageTextItem(
-                        //     icon: Icons.access_time,
-                        //     text: agencyList[index]["requesteddate"],
-                        //     textcolor: Colors.black45,
-                        //     imagecolor: Colors.orange,
-                        //     onPressed: () {},
-                        //     textSize: TextSizeConfig.size16,
-                        //     imageSize: 18),
+                        //承接日期
+                        CommonImageTextItem(
+                            icon: Icons.access_time,
+                            text: agencyList[index]["udcjdate"],
+                            textcolor: Colors.black45,
+                            imagecolor: Colors.orange,
+                            onPressed: () {},
+                            textSize: TextSizeConfig.size16,
+                            imageSize: 18),
                       ],
                     ),
                   ),
                 ),
               ),
-              Positioned(
-                  child: Align(
-                      alignment: Alignment.topRight,
-                      child: CommonTopRightTag(
-                        tag: agencyList[index]["status"],
-                        size: TextSizeConfig.size70,
-                      ))),
+              // Positioned(
+              //     child: Align(
+              //         alignment: Alignment.topRight,
+              //         child: CommonTopRightTag(
+              //           tag: agencyList[index]["status"],
+              //           size: TextSizeConfig.size70,
+              //         ))),
             ],
           );
         });

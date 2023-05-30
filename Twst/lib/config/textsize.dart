@@ -1,4 +1,6 @@
 class TextSizeConfig {
+  static double size70 = 70.0;
+  static double size60 = 60.0;
   static double size20 = 20.0;
   static double size18 = 18.0;
   static double size16 = 16.0;
