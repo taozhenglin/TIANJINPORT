@@ -15,7 +15,7 @@ class BaseListFragment extends StatefulWidget {
   }
 }
 
-class BaseListFragmentState extends State<BaseListFragment> {
+class BaseListFragmentState extends State<BaseListFragment> with AutomaticKeepAliveClientMixin{
   bool noData = false;
   late int startPage = Constants.START_PAGE;
   late int endPage = Constants.END_PAGE;
@@ -104,4 +104,8 @@ class BaseListFragmentState extends State<BaseListFragment> {
   }
 
   listbuilder() {}
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

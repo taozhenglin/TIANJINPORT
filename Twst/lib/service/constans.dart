@@ -28,6 +28,7 @@ class Constants {
   static String GSJ_BORROW_BACK = "工属具借用归还";
   static String GSL_LIST_TITLE = "工属具列表";
   static String GSJ_CJ_RECORD = "工属具承接记录";
+  static String GSJ_APPROVE_LIST="审批流程";
   static String GSJ_LIST_HINT = "请输入工属具编号/描述";
   static String DETAIL = "详情";
   static String GSJ_BORROW = "工属具借用";
@@ -68,10 +69,19 @@ class Constants {
   static String CJ_DEPT = "承接部门：";
   static String CJ_PERSON = "承接人：";
   static String CJ_DATE = "承接时间：";
+  static String APPROVE_DOT = "审核节点：";
+  static String APPROVE_BY="审批人：";
+  static String APPROVE_TIME="审批日期：";
+  static String APPROVE_MEMO="审批意见";
+  static String TO_APPROVE_DATE="流转至审核人日期:";
+
+
+
   static bool ISNETWORKAVAILABLE = true;
   static String GSJ_LIST = "1001";
   static String GSJ_BORROW_BACK_LIST = "1002";
   static String GSJ_CJ_RECORD_LIST = "1003";
   static String GSJ_CJ_LINE_LIST = "1004";
   static String TASK_LIST = "1005";
+  static String GSJ_APPROVE__RECORD_LIST = "1006";
 }

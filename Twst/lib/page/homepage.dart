@@ -1,5 +1,5 @@
-import 'dart:ffi';
 
+import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:twst/config/textsize.dart';
@@ -47,6 +47,13 @@ class _HomePageState extends State {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      body: PageTransitionSwitcher(
+        reverse: false,
+        child: pages[currentIndex],
+        duration: Duration(milliseconds: 500),
+        transitionBuilder: (child, animation, secondaryAnimation) =>SharedAxisTransition(child:child,animation: animation, secondaryAnimation: secondaryAnimation, transitionType: SharedAxisTransitionType.vertical,
+
+      )),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,
@@ -108,7 +115,7 @@ class _HomePageState extends State {
           _changeIndex(index);
         },
       ),
-      body: pages[currentIndex],
+
     );
   }
 

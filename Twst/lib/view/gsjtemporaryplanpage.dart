@@ -5,6 +5,7 @@ import 'package:twst/service/constans.dart';
 import 'package:twst/tools/logutils.dart';
 
 import '../bean/tabdatds.dart';
+import '../page/gsjapprovepage.dart';
 import '../page/gsjcjrecordpage.dart';
 import '../page/gsjdetailbackpage.dart';
 import '../page/gsjdetailborrowpage.dart';
@@ -51,6 +52,13 @@ class GsjTemporaryPlanPageState extends State<GsjTemporaryPlanPage> {
           route: '',
           widget: GsjCjRecordPage(
             num: widget.arguments['data']['num'],
+          )),
+      TabData(
+          title: Constants.GSJ_APPROVE_LIST,
+          route: '',
+          widget: GsjApprovePage(
+            num: widget.arguments['data']['num'],
+              ownerId:widget.arguments['data']['ownerId'],
           )),
     ];
   }

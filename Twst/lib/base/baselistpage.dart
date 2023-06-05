@@ -34,6 +34,8 @@ class BaseListPageState extends State<BaseListPage> {
   late String searchInput = "";
   late bool isNetWorkAvailable = true;
   late bool showSearchBar = true;
+  late bool showFlb = true;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -66,6 +68,7 @@ class BaseListPageState extends State<BaseListPage> {
             color: Colors.black,
           ),
         ),
+
       ),
       body: Column(
         children: [
@@ -101,9 +104,28 @@ class BaseListPageState extends State<BaseListPage> {
                         onRefresh: onRefresh,
                         onLoading: onLoading,
                         child: listbuilder()),
-          )
+          ),
+
+
+
         ],
       ),
+
+
+          floatingActionButton  : Container(
+            margin: EdgeInsets.all(10),
+            child: FloatingActionButton(
+        onPressed: () {
+      add();
+    },
+    hoverColor: Colors.orange,
+    focusColor: Colors.green,
+    highlightElevation: 0.0,
+    foregroundColor: Colors.red,
+    child: Icon(Icons.add_circle_sharp,size: 70,color: Colors.green),backgroundColor: Colors.transparent,),
+          ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+
     );
   }
 
@@ -151,6 +173,7 @@ class BaseListPageState extends State<BaseListPage> {
   void search() {}
 
   listbuilder() {}
+  add() {}
 }
 
-_lead() {}
+
