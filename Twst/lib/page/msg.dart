@@ -7,7 +7,7 @@ import 'package:twst/service/constans.dart';
 import 'package:twst/service/dioclent.dart';
 import 'package:twst/tools/datautil.dart';
 import 'package:twst/tools/hightutils.dart';
-import 'package:twst/view/common_imagetext_item.dart';
+import 'package:twst/view/common_icontext_item.dart';
 import 'package:twst/view/common_search_bar.dart';
 
 import '../config/textsize.dart';
@@ -315,7 +315,7 @@ class MsgItem extends StatelessWidget {
                     lightStyle: TextStyle(
                         fontSize: TextSizeConfig.size18,
                         color: Colors.tealAccent)),
-                CommonImageTextItem(
+                CommonIconTextItem(
                   icon: Icons.access_time,
                   text: bean["duedate"],
                   imagecolor: Colors.orange,
@@ -379,7 +379,7 @@ Container buildContainer(bean, String input) {
                   lightStyle: TextStyle(
                       fontSize: TextSizeConfig.size18,
                       color: Colors.tealAccent)),
-              CommonImageTextItem(
+              CommonIconTextItem(
                 icon: Icons.access_time,
                 text: bean["duedate"],
                 imagecolor: Colors.orange,

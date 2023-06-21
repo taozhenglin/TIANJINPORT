@@ -81,6 +81,7 @@ class DioClient {
     } else {
       Constants.ISNETWORKAVAILABLE = true;
     }
+    //map 转jason
     var content = jsonEncode(mapJaon);
     // var digest = base64Encode(content);
     // print("请求数据：$mapJaon");
@@ -112,4 +113,46 @@ class DioClient {
 
     return resultMap;
   }
+  static dynamic DioPost2(String userName, String maxOption, List list) async {
+    var netWorkAvailable = await NetWorkUtil.isNetWorkAvailable();
+    print(netWorkAvailable);
+    if (netWorkAvailable == 0) {
+      EasyLoading.showError('网络连接失败!');
+      Constants.ISNETWORKAVAILABLE = false;
+      return;
+    } else {
+      Constants.ISNETWORKAVAILABLE = true;
+    }
+    var content = jsonEncode(list);
+    // var digest = base64Encode(content);
+    // print("请求数据：$mapJaon");
+    // print("请求加密数据：$digest");
+    var request =
+        "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:max=\"http://www.ibm.com/maximo\">\r\n" +
+            "       <soapenv:Header/>\r\n" +
+            "       <soapenv:Body>\r\n" +
+            "          <max:eammobileWebServ creationDateTime=\"?\" baseLanguage=\"en\" transLanguage=\"zh\" messageID=\"?\" maximoVersion=\"?\">\r\n" +
+            "             <max:userId>$userName</max:userId>\r\n" +
+            "             <max:langCode>ZH</max:langCode>\r\n" +
+            "             <max:option>$maxOption</max:option>\r\n" +
+            "             <max:data>$content</max:data>\r\n" +
+            "          </max:eammobileWebServ>\r\n" +
+            "       </soapenv:Body>\r\n" +
+            "    </soapenv:Envelope>";
+    // Response response =
+    //     await DioClient._internal()._dio.post(UriList.getUrl(), data: request);
+    Response response =
+    await DioClient._internal()._dio.post(UriList.getUrl(), data: request);
+
+    if (response.toString().contains("<return>") &&
+        response.toString().contains("</return>")) {
+      int start = response.toString().indexOf("<return>");
+      int end = response.toString().indexOf("</return>");
+      String substring = response.toString().substring(start + 8, end);
+      resultMap = json.decode(substring);
+    } else {}
+
+    return resultMap;
+  }
+
 }

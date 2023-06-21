@@ -46,18 +46,32 @@ class CommonTopRightTag extends StatelessWidget {
             width: size,
             height: size,
           ));
-    } else {
+    }else if(tag==Constants.WAIT_CHECK){
       return Container(
-        padding: const EdgeInsets.only(left: 15, top: 5, right: 15, bottom: 5),
-        margin: EdgeInsets.all(5),
+          padding: EdgeInsets.all(5),
+          margin: EdgeInsets.all(5),
+          child: Image.asset(
+            'images/wait_check.jpg',
+            width: size,
+            height: size,
+          ));
+
+    }
+      else {
+      return Container(
+        padding: const EdgeInsets.only(left: 12, right: 12,top: 3, bottom: 4),
+        margin: EdgeInsets.only(top: 8,right: 8,bottom: 5),
         decoration: const BoxDecoration(
+          color: Colors.blueGrey,
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
-            gradient:
-                LinearGradient(colors: <Color>[Colors.blue, Colors.white24])),
+            // gradient:
+            //     LinearGradient(colors: <Color>[Colors.blue, Colors.black45])
+        ),
         child: Text(
           tag,
-          style: TextStyle(fontSize: TextSizeConfig.size16, wordSpacing: 8),
+
+          style: TextStyle(fontSize: TextSizeConfig.size16,color: Colors.white,letterSpacing: 5),
           textAlign: TextAlign.center,
         ),
       );

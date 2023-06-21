@@ -44,6 +44,7 @@ class CommonUpDownImageTextItem extends StatelessWidget {
             ),
             Text(
               text,
+              textAlign: TextAlign.center,
               style: TextStyle(color: Colors.black, fontSize: textSize),
             ),
           ],

@@ -2,15 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:twst/service/constans.dart';
 import 'package:twst/service/telandsmsservice.dart';
 import 'package:twst/tools/apptools.dart';
 import 'package:twst/tools/datautil.dart';
 import 'package:twst/tools/servicelocator.dart';
-import 'package:twst/view/common_imagetext_item.dart';
+import 'package:twst/view/common_icontext_item.dart';
 import 'package:twst/view/common_menu_item.dart';
 import 'package:twst/view/common_updown_text_item.dart';
+import 'package:twst/view/marqueetext.dart';
 
 import '../config/textsize.dart';
 import '../tools/colorutil.dart';
@@ -32,23 +35,24 @@ class _PersonPageState extends State {
   late String phoneNum = "";
   late String _path = '';
   late String _version = '';
+  late String logintime='';
   late String textFont = Constants.REGULAR_SIZE;
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.blueGrey.shade600,
-        title: Text(
-          Constants.PERSONAL_CENTER,
-          style:
-              TextStyle(fontSize: TextSizeConfig.size20, color: Colors.white),
-        ),
-        elevation: 0,
-      ),
+      // appBar: AppBar(
+      //   centerTitle: true,
+      //   automaticallyImplyLeading: false,
+      //   backgroundColor: Colors.black87,
+      //   title: Text(
+      //     Constants.PERSONAL_CENTER,
+      //     style:
+      //         TextStyle(fontSize: TextSizeConfig.size20, color: Colors.white),
+      //   ),
+      //   elevation: 0,
+      // ),
       body: Column(
         //整体上下布局
         children: [
@@ -56,118 +60,152 @@ class _PersonPageState extends State {
               child: Column(
             children: [
               //头部
-              Container(
-                // width: double.infinity,
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  // image: DecorationImage(
-                  //     // image: AssetImage("images/cosco_logo.jpg"),
-                  //     fit: BoxFit.cover),
-
-                  gradient: LinearGradient(colors: [
-                    Colors.blue,
-                    Colors.blueGrey.shade600,
-                  ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
-                ),
-                //左右布局  左边图像 右边上下布局分别显示 姓名 职位/部门
-                child: Column(
+                Stack(
                   children: [
-                    Row(
-                      children: [
-                        const SizedBox(
-                          width: 10,
-                        ),
+                    // Image.asset('images/app_bg.webp',fit: BoxFit.cover,height: 190,),
+                    Positioned(
+                      child:  Container(
+                        // width: double.infinity,
+                        height: 190,
+                        padding: const EdgeInsets.all(10),
+                        decoration:  const BoxDecoration(
+                          // image: DecorationImage(
+                          //     // image: AssetImage("images/cosco_logo.jpg"),
+                          //     fit: BoxFit.cover),
 
-                        GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet(
-                                backgroundColor: Colors.transparent,
-                                builder: (BuildContext context) {
-                                  return buildBottomSheetWidget();
-                                },
-                                context: this.context);
-                          },
-                          child: ClipOval(
-                              child: _path.isNotEmpty
-                                  ? Image.file(File(_path),
-                                      height: 100,
-                                      width: 100,
-                                      fit: BoxFit.cover)
-                                  : Image.asset("images/cosco_logo.jpg",
-                                      height: 100,
-                                      width: 100,
-                                      fit: BoxFit.cover)),
+                          gradient: LinearGradient(colors: [
+                            Colors.lightBlueAccent,
+                            Colors.lightBlue,
+                            Colors.lightBlueAccent,
+                          ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
                         ),
-                        const SizedBox(
-                          width: 40,
-                        ),
-                        //上下 名字 部门
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        //左右布局  左边图像 右边上下布局分别显示 姓名 职位/部门
+                        child: Column(
                           children: [
-                            Text(
-                              username!,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: TextSizeConfig.size20,
-                                  fontWeight: FontWeight.bold),
+                            const SizedBox(height: 40,),
+                            Row(
+                              children: [
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                const SizedBox(
+                                  height: 50,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                        backgroundColor: Colors.transparent,
+                                        builder: (BuildContext context) {
+                                          return buildBottomSheetWidget();
+                                        },
+                                        context: this.context);
+                                  },
+                                  child: ClipOval(
+                                      child: _path.isNotEmpty
+                                          ? Image.file(File(_path),
+                                          height: 100,
+                                          width: 100,
+                                          fit: BoxFit.cover)
+                                          // :Icon(Icons.person,size: 100,color: Colors.grey,))
+                                          : Image.asset("images/banner.jpg",
+                                          height: 100,
+                                          width: 100,
+                                          fit: BoxFit.cover)),
+                                ),
+                                const SizedBox(
+                                  width: 30,
+                                ),
+                                //上下 名字 部门
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      username!,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: TextSizeConfig.size20,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          udbm,
+                                          style: TextStyle(
+                                            fontSize: TextSizeConfig.size16,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 40,
+                                        ),
+                                        //电话号码
+                                        CommonIconTextItem(
+                                          icon: Icons.phone,
+                                          imageSize: 16,
+                                          textcolor: Colors.white,
+                                          textSize: TextSizeConfig.size14,
+                                          text: phoneNum,
+                                          imagecolor: Colors.orange,
+                                          onPressed: () {
+                                            // final String number = '15501198266';
+                                            _service.call(phoneNum);
+                                          },
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                )
+                              ],
                             ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            Text(
-                              udbm,
-                              style: TextStyle(
-                                fontSize: TextSizeConfig.size16,
-                                color: Colors.white,
-                              ),
-                            )
+                            // const SizedBox(
+                            //   height: 10,
+                            // ),
+                            //电话号码
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.center,
+                            //   // crossAxisAlignment: CrossAxisAlignment.center,
+                            //   children: [
+                            //     // Flexible(
+                            //     //   flex: 1,
+                            //     //   child: CommonIconTextItem(
+                            //     //     icon: Icons.email_rounded,
+                            //     //     text: '1345967291@qq.com',
+                            //     //     textcolor: Colors.black,
+                            //     //     imagecolor: Colors.yellow.shade900,
+                            //     //     imageSize: 16,
+                            //     //     textSize: TextSizeConfig.size14,
+                            //     //     onPressed: () {
+                            //     //       const String email = '1345967291@qq.com';
+                            //     //       _service.sendEmail(email);
+                            //     //     },
+                            //     //   ),
+                            //
+                            //     CommonIconTextItem(
+                            //       icon: Icons.phone,
+                            //       imageSize: 16,
+                            //       textcolor: Colors.white,
+                            //       textSize: TextSizeConfig.size14,
+                            //       text: phoneNum,
+                            //       imagecolor: Colors.orange,
+                            //       onPressed: () {
+                            //         // final String number = '15501198266';
+                            //         _service.call(phoneNum);
+                            //       },
+                            //     ),
+                            //
+                            //   ],
+                            // )
                           ],
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: CommonImageTextItem(
-                            icon: Icons.email_rounded,
-                            text: '1345967291@qq.com',
-                            textcolor: Colors.black,
-                            imagecolor: Colors.yellow.shade900,
-                            imageSize: 16,
-                            textSize: TextSizeConfig.size14,
-                            onPressed: () {
-                              const String email = '1345967291@qq.com';
-                              _service.sendEmail(email);
-                            },
-                          ),
                         ),
-                        Flexible(
-                          flex: 1,
-                          child: CommonImageTextItem(
-                            icon: Icons.phone,
-                            imageSize: 16,
-                            textcolor: Colors.black,
-                            textSize: TextSizeConfig.size14,
-                            text: phoneNum,
-                            imagecolor: Colors.black,
-                            onPressed: () {
-                              // final String number = '15501198266';
-                              _service.call(phoneNum);
-                            },
-                          ),
-                        ),
-                      ],
+                      ),
                     )
+
                   ],
-                ),
+
               ),
 
               // margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
@@ -186,19 +224,33 @@ class _PersonPageState extends State {
                         countColor: Colors.yellow,
                         onPressed: () {
                           print('版本号');
+
                         },
                       ),
+
                       CommonUpDownTextItem(
-                        text: Constants.WAIT_DO,
+                        text: Constants.LOGIN_TIME,
                         textSize: TextSizeConfig.size14,
                         textColor: Colors.black54,
-                        count: "99",
+                        count: logintime,
                         countSize: TextSizeConfig.size18,
                         countColor: Colors.yellow,
                         onPressed: () {
                           print('待办');
                         },
                       ),
+
+                      // CommonUpDownTextItem(
+                      //   text: Constants.WAIT_DO,
+                      //   textSize: TextSizeConfig.size14,
+                      //   textColor: Colors.black54,
+                      //   count: "99",
+                      //   countSize: TextSizeConfig.size18,
+                      //   countColor: Colors.yellow,
+                      //   onPressed: () {
+                      //     print('待办');
+                      //   },
+                      // ),
                       CommonUpDownTextItem(
                         text: '待办',
                         textSize: TextSizeConfig.size14,
@@ -246,13 +298,18 @@ class _PersonPageState extends State {
                       icon: "images/history.png",
                       title: Constants.VERSION_HISTORY,
                       onPressed: () {
-                        print('版本号');
                       },
                       flag: 0,
-                      note: "1.0.0",
-                      color: Colors.green,
+                      note: "",
                     ),
-
+                    CommonMenuItem(
+                      icon: "images/clean.png",
+                      title: Constants.CLEAN_SP,
+                      onPressed: _cleanCash,
+                      flag: 0,
+                      note: "",
+                      color: Colors.redAccent,
+                    ),
                     CommonMenuItem(
                       icon: "images/textfont.png",
                       title: Constants.TEXT_FONT_SIZE,
@@ -267,8 +324,9 @@ class _PersonPageState extends State {
                       },
                       flag: 1,
                       note: textFont,
-                      color: Colors.green,
+                      color: Colors.orange,
                     ),
+
                   ],
                 ),
               ),
@@ -280,12 +338,12 @@ class _PersonPageState extends State {
             margin: EdgeInsets.all(8),
             alignment: Alignment.center,
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.grey,
-              borderRadius: new BorderRadius.all(Radius.circular(30)),
+              borderRadius:  BorderRadius.all(Radius.circular(30)),
               gradient: LinearGradient(colors: <Color>[
-                Colors.blueGrey.shade600,
-                Colors.blue,
+                Colors.black87,
+                Colors.black12,
               ]),
             ),
             height: 50,
@@ -355,12 +413,12 @@ class _PersonPageState extends State {
   Widget _buildNumberTextWidget(String number, String text) {
     return TextButton(
       child: Column(children: [
-        Text(number, style: TextStyle(fontSize: 25, color: Colors.blue)),
-        Text(text, style: TextStyle(color: Colors.black54)),
+        Text(number, style: const TextStyle(fontSize: 25, color: Colors.blue)),
+        Text(text, style: const TextStyle(color: Colors.black54)),
       ]),
       style: ButtonStyle(
           padding:
-              MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 40))),
+              MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 40))),
       onPressed: () {},
     );
   }
@@ -369,7 +427,7 @@ class _PersonPageState extends State {
     String resultMessage = '';
     //弹框中内容  310 的调试
     return Container(
-      margin: EdgeInsets.only(left: 10, right: 10),
+      margin: const EdgeInsets.only(left: 10, right: 10),
       decoration: const BoxDecoration(
         color: Colors.white54,
         borderRadius: BorderRadius.only(
@@ -437,7 +495,7 @@ class _PersonPageState extends State {
             },
             child: Container(
               child: Text(
-                "取消",
+                Constants.CANAELED,
                 style: TextStyle(fontSize: TextSizeConfig.size14),
               ),
               height: 44,
@@ -506,6 +564,7 @@ class _PersonPageState extends State {
             height: 30,
             child: InkWell(
               onTap: () {
+
                 setState(() {
                   TextSizeConfig.size8 = 10.0;
                   TextSizeConfig.size14 = 16.0;
@@ -513,8 +572,11 @@ class _PersonPageState extends State {
                   TextSizeConfig.size18 = 20.0;
                   TextSizeConfig.size20 = 22.0;
                   textFont = Constants.LARGE_SIZE;
-                  Navigator.of(context).pop();
-                });
+                }
+
+                );
+                Navigator.of(context).pop();
+
               },
               child: buildItem("大", "", onTap: () {}),
             ),
@@ -526,6 +588,7 @@ class _PersonPageState extends State {
             height: 30,
             child: InkWell(
               onTap: () {
+                EasyLoading.showInfo('超大字体可能会降低设备分辨率');
                 setState(() {
                   TextSizeConfig.size8 = 12.0;
                   TextSizeConfig.size14 = 18.0;
@@ -628,5 +691,18 @@ class _PersonPageState extends State {
     setState(() {
       _version = version;
     });
+    String time = await DataUtils.getString("logintime");
+    print("time==${time}");
+    setState(() {
+      logintime = time;
+    });
+
+  }
+  _cleanCash() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    EasyLoading.showSuccess(Constants.CASH_CLEANED);
+    // 删除极光别名
+    //jPush.deleteAlias().then((map) {});
   }
 }

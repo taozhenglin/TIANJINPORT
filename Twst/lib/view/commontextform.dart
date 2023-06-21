@@ -22,6 +22,7 @@ class CommonTextForm extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
+      padding: const EdgeInsets.all(1),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

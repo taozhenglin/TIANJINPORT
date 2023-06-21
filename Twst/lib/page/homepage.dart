@@ -59,11 +59,11 @@ class _HomePageState extends State {
         currentIndex: currentIndex,
         showSelectedLabels: true,
         unselectedItemColor: Colors.grey, //主要用于设置item及字体颜色
-        selectedItemColor: Colors.red, //主要用于设置item及字体颜色
+        selectedItemColor: Colors.lightBlue, //主要用于设置item及字体颜色
         unselectedFontSize: TextSizeConfig.size16,
         selectedFontSize: TextSizeConfig.size18,
         unselectedIconTheme: IconThemeData(color: Colors.grey),
-        selectedIconTheme: IconThemeData(color: Colors.red),
+        selectedIconTheme: IconThemeData(color: Colors.lightBlue),
         // showUnselectedLabels: false,
         items: [
           const BottomNavigationBarItem(

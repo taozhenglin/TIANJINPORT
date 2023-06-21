@@ -12,12 +12,16 @@ import 'package:twst/config/textsize.dart';
 import 'package:twst/net/httpconfig.dart';
 import 'package:twst/service/constans.dart';
 import 'package:twst/service/dioclent.dart';
+import 'package:twst/tools/apptools.dart';
 import 'package:twst/tools/datautil.dart';
+import 'package:twst/tools/dateuti.dart';
 import 'package:twst/tools/dialogutil.dart';
 import 'package:twst/tools/logutils.dart';
+
 // import 'package:twst/tools/toastutils.dart';
 import 'package:twst/uri/urilist.dart';
-import 'package:twst/view/common_imagetext_item.dart';
+import 'package:twst/view/common_icontext_item.dart';
+import 'package:twst/view/marqueetext.dart';
 import 'package:twst/view/mydialog.dart';
 import 'package:twst/view/notablepage.dart';
 
@@ -25,6 +29,7 @@ import 'bean/loginbean.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -40,6 +45,7 @@ class _LoginPage extends State<LoginPage> {
   TextEditingController _uPwdController = TextEditingController();
   bool _isObscure = true;
   final con = GlobalKey<ScaffoldState>();
+  late String _version = '';
 
   // final mContext = GlobalKey<ScaffoldState>();
   // _LoginPage();
@@ -55,141 +61,249 @@ class _LoginPage extends State<LoginPage> {
     // print("args==${args}");
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        // appBar: AppBar(
-        //   title: const Text(
-        //     '这是一个新页面',
-        //     style: TextStyle(color: Colors.black),
-        //   ),
-        //   // backgroundColor: Colors.transparent,
-        //   leading: _leading(context),
-        //   brightness: Brightness.dark,
-        //   backgroundColor: Colors.white,
-        //   primary: true,
-        // ),
-
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(25),
-          child: Column(
-            children: <Widget>[
-              Text(title),
-              // TextButton(
-              //     onPressed: () => Navigator.pop(context, "我是点击按钮带回来的"),
-              //     child: const Text('点我带值返回')),
-              SizedBox(
-                height: 45,
-              ),
-              // NotablePage(
-              //     Text(
-              //       '欢迎登录天津港移动客户端',
-              //       style: TextStyle(color: Colors.greenAccent),
-              //     ),
-              //     200.0,
-              //     new Duration(seconds: 2),
-              //     200.0),
-              ClipOval(
-                child: Image.asset("images/app_bg.jpg",
-                    height: 180, width: 180, fit: BoxFit.cover),
-              ),
-              SizedBox(
-                height: 40,
-              ),
-              Container(
-                padding:
-                    EdgeInsets.only(left: 20, top: 0, right: 20, bottom: 0),
-                child: TextField(
-                  controller: _uNameController,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                      labelStyle: TextStyle(fontSize: TextSizeConfig.size16),
-                      labelText: "用户名",
-                      hintText: Constants.LOGIN_USERNAME_DESC,
-                      prefixIcon: Icon(Icons.person),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.clear),
-                        onPressed: () {
-                          setState(() {
-                            _uNameController.clear();
-                          });
-                        },
-                      )),
-                ),
-              ),
-
-              SizedBox(
-                height: 15,
-              ),
-              Container(
-                padding:
-                    EdgeInsets.only(left: 20, top: 0, right: 20, bottom: 0),
-                child: TextField(
-                  obscureText: _isObscure,
-                  controller: _uPwdController,
-                  textInputAction: TextInputAction.done,
-                  decoration: InputDecoration(
-                      labelStyle: TextStyle(fontSize: TextSizeConfig.size16),
-                      labelText: "密码",
-                      hintText: Constants.LOGIN_PASSWORD_DESC,
-                      prefixIcon: Icon(Icons.password),
-                      suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _isObscure = !_isObscure;
-                            });
-                          },
-                          icon: Icon(_isObscure
-                              ? Icons.visibility
-                              : Icons.visibility_off))),
-                ),
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              Container(
-                margin:
-                    EdgeInsets.only(left: 100, top: 50, right: 0, bottom: 0),
-                child: GestureDetector(
-                  child: Text(
-                    '1.0',
-                    style: TextStyle(fontSize: TextSizeConfig.size14),
-                  ),
-                  onLongPress: () {
-                    // con.currentState!.showBottomSheet(
-                    //   (BuildContext context) => buildBottomSheetWidget(),
-                    // );
-                    print('点击长按');
-                    // mContext.currentState!.showBottomSheet(build:(BuildContext con))
-                    showModalBottomSheet(
-                        backgroundColor: Colors.transparent,
-                        builder: (BuildContext context) {
-                          return buildBottomSheetWidget();
-                        },
-                        context: this.context);
+        body: Stack(
+          children: [
+            Image.asset(
+              'images/app_bg.webp',
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: 800,
+            ),
+            Positioned(
+              child:  Container(
+                margin: EdgeInsets.only(top: 20),
+                child: MarqueeWidget(
+                  itemCount: 4,
+                  itemBuilder: (BuildContext context, int index,
+                      BoxConstraints constraints) {
+                    return Container(
+                      // color: Colors.green,
+                      // child: itemWidgets[index],
+                      child: Text(
+                        "欢 迎 登 录 天 津 港 移 动 客 户 端",
+                        style: TextStyle(color: Colors.white,fontStyle: FontStyle.italic,fontSize: TextSizeConfig.size20,fontWeight: FontWeight.w900),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context,
+                      int index, BoxConstraints constraints) {
+                    return Container(
+                      width: 100,
+                    );
+                  },
+                  edgeBuilder: (BuildContext context, int index,
+                      BoxConstraints constraints) {
+                    return Container(
+                      width: constraints.maxWidth,
+                    );
                   },
                 ),
-              ),
-              Container(
-                width: 300,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.grey, width: 1),
-                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                    gradient: LinearGradient(
-                        colors: <Color>[Colors.red, Colors.blue])),
-                child: TextButton(
-                    onPressed: login,
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(200, 50),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        shadowColor: Colors.lightGreen),
-                    child: Text('登 录',
+              ),),
+
+            Positioned(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          // TextButton(
+                          //     onPressed: () => Navigator.pop(context, "我是点击按钮带回来的"),
+                          //     child: const Text('点我带值返回')),
+
+                          SizedBox(
+                            height: 75,
+                          ),
+                          // NotablePage(
+                          //     Text(
+                          //       '欢迎登录天津港移动客户端',
+                          //       style: TextStyle(color: Colors.greenAccent),
+                          //     ),
+                          //     200.0,
+                          //     new Duration(seconds: 2),
+                          //     200.0),
+                          //背景图
+                          // ClipOval(
+                          //   // child: Image.asset("images/app_bg.webp",
+                          //   //     height: 130, width: 130, fit: BoxFit.cover),
+                         
+                          Icon(
+                            Icons.person,
+                            size: 130,
+                            color: Colors.blueAccent,
+                          ),
+                          // ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //用户名
+                          Container(
+                            color: Colors.transparent,
+                            margin: EdgeInsets.only(
+                                left: 50, top: 0, right: 50, bottom: 0),
+                            child: TextField(
+                              style: TextStyle(
+                                  fontSize: TextSizeConfig.size16,
+                                  color: Colors.white),
+                              controller: _uNameController,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(
+                                  filled: true,
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.white, width: 2),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(100),
+                                    ),
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.white, width: 2),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(100),
+                                    ),
+                                  ),
+                                  labelStyle: TextStyle(
+                                      fontSize: TextSizeConfig.size16,
+                                      color: Colors.white),
+                                  labelText: "用户名",
+                                  hintText: Constants.LOGIN_USERNAME_DESC,
+                                  hintStyle: TextStyle(color: Colors.white),
+                                  prefixIcon: Icon(
+                                    Icons.person,
+                                    color: Colors.orange,
+                                  ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      Icons.clear,
+                                      color: Colors.black87,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _uNameController.clear();
+                                      });
+                                    },
+                                  )),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          //密码
+                          Container(
+                            margin: EdgeInsets.only(
+                                left: 50, top: 0, right: 50, bottom: 0),
+                            child: TextField(
+                              style: TextStyle(
+                                fontSize: TextSizeConfig.size16,
+                                color: Colors.white,
+                              ),
+                              obscureText: _isObscure,
+                              controller: _uPwdController,
+                              textInputAction: TextInputAction.done,
+                              decoration: InputDecoration(
+                                  filled: true,
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.white, width: 2),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(100),
+                                    ),
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.white, width: 2),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(100),
+                                    ),
+                                  ),
+                                  labelStyle: TextStyle(
+                                      fontSize: TextSizeConfig.size16,
+                                      color: Colors.white),
+                                  labelText: Constants.PWD,
+                                  hintText: Constants.LOGIN_PASSWORD_DESC,
+                                  hintStyle: TextStyle(color: Colors.white),
+                                  prefixIcon: Icon(Icons.password,
+                                      color: Colors.orange),
+                                  suffixIcon: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _isObscure = !_isObscure;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        _isObscure
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                        color: Colors.black87,
+                                      ))),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 25,
+                          ),
+                          //登录
+                          Container(
+                            width: double.infinity,
+                            margin: EdgeInsets.only(
+                                left: 50, top: 0, right: 50, bottom: 0),
+                            decoration: BoxDecoration(
+                                // color: Colors.white,
+                                // border: Border.all(color: Colors.lightBlueAccent, width: 5),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(30),
+                                ),
+                                gradient: LinearGradient(colors: <Color>[
+                                  Colors.blue.shade600,
+                                  Colors.blue.shade200
+                                ])),
+                            child: TextButton(
+                                onPressed: login,
+                                style: ElevatedButton.styleFrom(
+                                    minimumSize: const Size(200, 50),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    shadowColor: Colors.lightGreen),
+                                child: Text('登 录',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: TextSizeConfig.size20))),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  //环境切换
+                  Container(
+                    margin: EdgeInsets.only(bottom: 20),
+                    child: GestureDetector(
+                      child: Text(
+                        _version,
                         style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: TextSizeConfig.size20))),
+                            fontSize: TextSizeConfig.size14,
+                            color: Colors.white),
+                      ),
+                      onLongPress: () {
+                        // con.currentState!.showBottomSheet(
+                        //   (BuildContext context) => buildBottomSheetWidget(),
+                        // );
+                        print('点击长按');
+                        // mContext.currentState!.showBottomSheet(build:(BuildContext con))
+                        showModalBottomSheet(
+                            backgroundColor: Colors.transparent,
+                            builder: (BuildContext context) {
+                              return buildBottomSheetWidget();
+                            },
+                            context: this.context);
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ));
   }
 
@@ -202,7 +316,7 @@ class _LoginPage extends State<LoginPage> {
     _uPwdController.addListener(() {
       _printInput();
     });
-    initInput();
+    initData();
   }
 
   void login() async {
@@ -250,17 +364,23 @@ class _LoginPage extends State<LoginPage> {
         Map<String, dynamic> resultMap =
             await DioClient.DioPost(name, option, json);
         if (resultMap['code'] == "1") {
+          EasyLoading.showSuccess(resultMap['msg']['description']);
           DataUtils.setString("username", resultMap['msg']['name']);
           DataUtils.setString("loginname", name);
           DataUtils.setString("pwd", pwd);
           DataUtils.setString("udbm", resultMap['msg']['udbm']);
           DataUtils.setString("dbnum", resultMap['msg']['dbnum']);
           DataUtils.setString("siteid", resultMap['msg']['siteid']);
+          DataUtils.setString("udbmbm", resultMap['msg']['udbmbm']);
+          DataUtils.setString("logintime",
+              DateUtil.getYYYYMMDDHHMMSS(DateTime.now(), "-", "-"));
+
           Navigator.pushReplacementNamed(context, '/homepage');
         } else {
           print("code==  0");
           // ToastUtils.shotToast(resultMap['msg']);
           DiaLogUtil.disMiss(context);
+          EasyLoading.showError(resultMap['msg']);
         }
       } catch (e) {
         LogE(e.toString());
@@ -411,7 +531,7 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 
-  Future<void> initInput() async {
+  Future<void> initData() async {
     String name = await DataUtils.getString("loginname");
     if (name!.isNotEmpty) {
       _uNameController.text = name;
@@ -420,5 +540,10 @@ class _LoginPage extends State<LoginPage> {
     if (pwd!.isNotEmpty) {
       _uPwdController.text = pwd;
     }
+    String version = await AppInfoUtils.getAppVersion();
+    print("version=${version}");
+    setState(() {
+      _version = version;
+    });
   }
 }

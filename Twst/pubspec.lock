@@ -190,6 +190,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.4"
+  flutter_pickers:
+    dependency: "direct main"
+    description:
+      name: flutter_pickers
+      sha256: "2dff3fddfc81631c3d3e8ea1c4da099de70a394bf4f9d5413e4a6b2fb730c2f8"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.2"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:

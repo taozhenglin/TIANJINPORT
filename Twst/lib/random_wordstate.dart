@@ -16,7 +16,7 @@ class RandomWordsState extends State<RandomWords> {
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "一个ListView",
           style: TextStyle(color: Colors.green),
         ),
@@ -89,11 +89,11 @@ class RandomWordsState extends State<RandomWords> {
             context: context,
             tiles: tiles,
           ).toList();
-          return new Scaffold(
-            appBar: new AppBar(
+          return Scaffold(
+            appBar:  AppBar(
               title: Text("只是跳转页面"),
             ),
-            body: new ListView(children: divided),
+            body:  ListView(children: divided),
           );
         },
       ),

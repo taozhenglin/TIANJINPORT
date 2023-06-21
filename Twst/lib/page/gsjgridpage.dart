@@ -7,7 +7,7 @@ import 'package:twst/tools/logutils.dart';
 
 import '../bean/tabdatds.dart';
 import '../view/common_updown_imagetext_item.dart';
-import '../view/gsjtemporaryplanlist.dart';
+import 'gsj_borrow_back_list.dart';
 
 class GsjGridView extends StatefulWidget {
   @override
@@ -49,7 +49,7 @@ class GsjGridViewPage extends State<GsjGridView> {
           title: '工属具发放归还',
           icon: Icons.backup,
           image: "images/return.png",
-          route: "/gsjtemporaryplanlist"),
+          route: "/gsj_borrow_back_list"),
       const TabData(
           title: '工属具日检',
           icon: Icons.check,
@@ -124,7 +124,7 @@ class GsjGridViewPage extends State<GsjGridView> {
     return Scaffold(
       body: AnimationLimiter(
         child: GridView.count(
-          padding: EdgeInsets.all(5),
+          padding: EdgeInsets.all(0),
           crossAxisCount: 3,
           // childAspectRatio: 1,
           // mainAxisSpacing: 10,
@@ -139,21 +139,23 @@ class GsjGridViewPage extends State<GsjGridView> {
                 child: ScaleAnimation(
                     child: FadeInAnimation(
                         child: Center(
-                  child: CommonUpDownImageTextItem(
-                    icon: datas[index].icon!,
-                    image: datas[index].image!,
-                    text: datas[index].title,
-                    imagecolor: ColorUtils.getRandomColor(),
-                    onPressed: () {
-                      LogD('${index}');
-                      if (datas[index].title == "工属具发放归还") {
-                        Navigator.pushNamed(context, '/gsjtemporaryplanlist');
-                      }
+                  child: Card(
+                    color: Colors.white54,
+                    child: CommonUpDownImageTextItem(
+                      icon: datas[index].icon!,
+                      image: datas[index].image!,
+                      text: datas[index].title,
+                      imagecolor: ColorUtils.getRandomColor(),
+                      onPressed: () {
+                        LogD('${index}');
+                          Navigator.pushNamed(context, datas[index].route);
 
-                      // Navigator.pushNamed(context, datas[index].route);
-                    },
-                    textSize: TextSizeConfig.size16,
-                    imageSize: 40,
+
+                        // Navigator.pushNamed(context, datas[index].route);
+                      },
+                      textSize: TextSizeConfig.size16,
+                      imageSize: 40,
+                    ),
                   ),
                 ))),
               );

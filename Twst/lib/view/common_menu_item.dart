@@ -8,7 +8,7 @@ class CommonMenuItem extends StatelessWidget {
   final VoidCallback onPressed;
   final int flag;
   final String note;
-  final Color color;
+  final Color? color;
   final String icon;
 
   const CommonMenuItem({
@@ -16,7 +16,7 @@ class CommonMenuItem extends StatelessWidget {
     required this.onPressed,
     required this.flag,
     required this.note,
-    required this.color,
+     this.color,
     required this.icon,
   });
 
@@ -29,21 +29,22 @@ class CommonMenuItem extends StatelessWidget {
         children: <Widget>[
           Padding(
               padding: const EdgeInsets.only(
-                left: 20.0,
+                left: 16.0,
                 top: 8.0,
-                right: 20.0,
+                right: 16.0,
                 bottom: 8.0,
               ),
               child: Row(
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(
-                      right: 8.0,
+                      right: 6.0,
                     ),
                     child: Image.asset(
                       icon,
                       width: 25,
                       height: 25,
+                      color: color,
                     ),
                   ),
                   Expanded(
@@ -55,7 +56,7 @@ class CommonMenuItem extends StatelessWidget {
                   if (flag == 1)
                     Text(
                       note,
-                      style: TextStyle(fontSize: TextSizeConfig.size14),
+                      style: TextStyle(fontSize: TextSizeConfig.size16),
                     ),
                   const Icon(
                     Icons.chevron_right,
@@ -63,6 +64,7 @@ class CommonMenuItem extends StatelessWidget {
                   )
                 ],
               )),
+          if(flag==0)
           const Padding(
             padding: EdgeInsets.only(left: 20.0, right: 20.0),
             child: Divider(
