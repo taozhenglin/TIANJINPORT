@@ -71,7 +71,7 @@ class _LoginPage extends State<LoginPage> {
             ),
             Positioned(
               child:  Container(
-                margin: EdgeInsets.only(top: 20),
+                margin: EdgeInsets.only(top: 40),
                 child: MarqueeWidget(
                   itemCount: 4,
                   itemBuilder: (BuildContext context, int index,
@@ -80,7 +80,7 @@ class _LoginPage extends State<LoginPage> {
                       // color: Colors.green,
                       // child: itemWidgets[index],
                       child: Text(
-                        "欢 迎 登 录 天 津 港 移 动 客 户 端",
+                        "欢 迎 登 录 天 津 港 股 份 有 限 公 司 移 动 客 户 端",
                         style: TextStyle(color: Colors.white,fontStyle: FontStyle.italic,fontSize: TextSizeConfig.size20,fontWeight: FontWeight.w900),
                       ),
                     );
@@ -142,6 +142,13 @@ class _LoginPage extends State<LoginPage> {
                             margin: EdgeInsets.only(
                                 left: 50, top: 0, right: 50, bottom: 0),
                             child: TextField(
+                              onSubmitted: (value){
+                                if (_uNameController.text.isEmpty) {
+                                  EasyLoading.showError(Constants.LOGIN_USERNAME_DESC);
+                                  return;
+                                }else
+                                LogD(_uNameController.text);
+                              },
                               style: TextStyle(
                                   fontSize: TextSizeConfig.size16,
                                   color: Colors.white),
@@ -194,6 +201,13 @@ class _LoginPage extends State<LoginPage> {
                             margin: EdgeInsets.only(
                                 left: 50, top: 0, right: 50, bottom: 0),
                             child: TextField(
+                              onSubmitted: (value){
+                                if (_uPwdController.text.isEmpty) {
+                                  EasyLoading.showError(Constants.LOGIN_PASSWORD_DESC);
+                                  return;
+                                }else
+                                  LogD(_uPwdController.text);
+                              },
                               style: TextStyle(
                                 fontSize: TextSizeConfig.size16,
                                 color: Colors.white,
@@ -265,11 +279,13 @@ class _LoginPage extends State<LoginPage> {
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     shadowColor: Colors.lightGreen),
-                                child: Text('登 录',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: TextSizeConfig.size20))),
+                                child: Icon(Icons.login_rounded,size: 40,color: Colors.white,),
+                                // child: Text('登 录',
+                                //     style: TextStyle(
+                                //         color: Colors.white,
+                                //         fontWeight: FontWeight.bold,
+                                //         fontSize: TextSizeConfig.size20)),
+                            ),
                           ),
                         ],
                       ),

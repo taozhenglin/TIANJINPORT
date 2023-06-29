@@ -8,6 +8,7 @@ import 'package:flutter_pickers/time_picker/model/suffix.dart';
 import 'package:twst/tools/dateuti.dart';
 import 'package:twst/view/common_appbar.dart';
 
+import '../bean/eventbus.dart';
 import '../config/textsize.dart';
 import '../service/constans.dart';
 import '../service/dioclent.dart';
@@ -428,10 +429,10 @@ class AddGsjDetailPageState extends State<AddGsjDetailPage>{
       EasyLoading.showToast('请输入借用/归还说明');
       return;
     }
-    // if(store.isEmpty){
-    //   EasyLoading.showToast('请选择仓库');
-    //   return;
-    // }
+    if(store.isEmpty){
+      EasyLoading.showToast('请选择仓库');
+      return;
+    }
 
     DiaLogUtil.show(context, Colors.black12, "加载中...");
     String option = Constants.ADD;
@@ -444,7 +445,7 @@ class AddGsjDetailPageState extends State<AddGsjDetailPage>{
         "udcreatby":name,
         "RECIPIENT":recipientno,
       "DEPTNUM":udbmbm,
-        "UDISSUEDBY":displyName,
+        "UDISSUEDBY":name,
       "UDISSUEDDATE":sendtime,
         "UDZYDD":udzydd,
         "UDZYHL":udzyhl,
@@ -460,6 +461,8 @@ class AddGsjDetailPageState extends State<AddGsjDetailPage>{
       if (resultMap['code'] == Constants.CODE_OK) {
         DiaLogUtil.disMiss(context);
         EasyLoading.showSuccess(resultMap['msg']);
+        eventBus.fire(EventA(  Constants.REFRESH_GSJ));
+        Navigator.of(context).pop();
       }else{
         EasyLoading.showToast(resultMap['msg']);
         // DiaLogUtil.disMiss(context);

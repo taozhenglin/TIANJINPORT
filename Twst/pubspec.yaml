@@ -46,6 +46,8 @@ dependencies:
   flutter_easyloading: ^3.0.5
   animations: ^2.0.0
   flutter_pickers: ^1.0.0
+  device_info_plus: ^8.2.2
+  flustars: ^2.0.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -127,6 +129,11 @@ flutter:
   - images/wait_check.jpg
   - images/clean.png
   - images/banner.jpg
+  - images/cj.png
+  - images/login_out.png
+  - images/reject.jpg
+  - images/agree.jpg
+  - images/app_bg.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

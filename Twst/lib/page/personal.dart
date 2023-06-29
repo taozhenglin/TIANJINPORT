@@ -74,9 +74,9 @@ class _PersonPageState extends State {
                           //     fit: BoxFit.cover),
 
                           gradient: LinearGradient(colors: [
-                            Colors.lightBlueAccent,
-                            Colors.lightBlue,
-                            Colors.lightBlueAccent,
+                            Colors.black87,
+                            Colors.black54,
+                            Colors.black26,
                           ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
                         ),
                         //左右布局  左边图像 右边上下布局分别显示 姓名 职位/部门
@@ -212,6 +212,7 @@ class _PersonPageState extends State {
               Card(
                 child: Container(
                   margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -221,7 +222,7 @@ class _PersonPageState extends State {
                         textColor: Colors.black54,
                         count: _version,
                         countSize: TextSizeConfig.size18,
-                        countColor: Colors.yellow,
+                        countColor: Colors.black,
                         onPressed: () {
                           print('版本号');
 
@@ -234,7 +235,7 @@ class _PersonPageState extends State {
                         textColor: Colors.black54,
                         count: logintime,
                         countSize: TextSizeConfig.size18,
-                        countColor: Colors.yellow,
+                        countColor: Colors.black,
                         onPressed: () {
                           print('待办');
                         },
@@ -255,9 +256,9 @@ class _PersonPageState extends State {
                         text: '待办',
                         textSize: TextSizeConfig.size14,
                         textColor: Colors.black54,
-                        count: "99",
+                        count: "0",
                         countSize: TextSizeConfig.size18,
-                        countColor: Colors.yellow,
+                        countColor: Colors.black,
                         onPressed: () {
                           print('待办');
                         },
@@ -283,33 +284,6 @@ class _PersonPageState extends State {
                       note: "",
                       color: Colors.black54,
                     ),
-
-                    // CommonMenuItem(
-                    //   icon: "images/qiandao_yellow.png",
-                    //   title: '签到',
-                    //   onPressed: () {
-                    //     print('签到');
-                    //   },
-                    //   flag: 0,
-                    //   note: "",
-                    //   color: Colors.pink,
-                    // ),
-                    CommonMenuItem(
-                      icon: "images/history.png",
-                      title: Constants.VERSION_HISTORY,
-                      onPressed: () {
-                      },
-                      flag: 0,
-                      note: "",
-                    ),
-                    CommonMenuItem(
-                      icon: "images/clean.png",
-                      title: Constants.CLEAN_SP,
-                      onPressed: _cleanCash,
-                      flag: 0,
-                      note: "",
-                      color: Colors.redAccent,
-                    ),
                     CommonMenuItem(
                       icon: "images/textfont.png",
                       title: Constants.TEXT_FONT_SIZE,
@@ -326,6 +300,36 @@ class _PersonPageState extends State {
                       note: textFont,
                       color: Colors.orange,
                     ),
+                    // CommonMenuItem(
+                    //   icon: "images/history.png",
+                    //   title: Constants.VERSION_HISTORY,
+                    //   onPressed: () {
+                    //     print('更新记录');
+                    //   },
+                    //   flag: 0,
+                    //   note: "",
+                    // ),
+
+
+                    CommonMenuItem(
+                      icon: "images/login_out.png",
+                      title: Constants.LOGIN_OUT,
+                      onPressed: () {
+                        _loginOut();
+                      },
+                      flag: 0,
+                      note: "",
+                      color: Colors.red,
+                    ),
+
+                    // CommonMenuItem(
+                    //   icon: "images/clean.png",
+                    //   title: Constants.CLEAN_SP,
+                    //   onPressed: _cleanCash,
+                    //   flag: 0,
+                    //   note: "",
+                    //   color: Colors.redAccent,
+                    // ),
 
                   ],
                 ),
@@ -334,32 +338,31 @@ class _PersonPageState extends State {
           )),
           // Spacer(),
 //退出登录
-          Container(
-            margin: EdgeInsets.all(8),
-            alignment: Alignment.center,
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              color: Colors.grey,
-              borderRadius:  BorderRadius.all(Radius.circular(30)),
-              gradient: LinearGradient(colors: <Color>[
-                Colors.black87,
-                Colors.black12,
-              ]),
-            ),
-            height: 50,
-            child: TextButton(
-              onPressed: _loginOut,
-              child: Text(
-                Constants.LOGIN_OUT,
-                style: TextStyle(
-                    color: Colors.white, fontSize: TextSizeConfig.size20),
-              ),
-              // splashColor: Colors.green,
-            ),
-          ),
+//           Container(
+//             margin: EdgeInsets.fromLTRB(0,0,0,20),
+//             alignment: Alignment.center,
+//             // width: 100,
+//             // decoration:  const BoxDecoration(
+//             //   color: Colors.grey,
+//             //   borderRadius:  BorderRadius.all(Radius.circular(30)),
+//             //   // gradient: LinearGradient(colors: <Color>[
+//             //   //   Colors.black87,
+//             //   //   Colors.black12,
+//             //   // ]),
+//             // ),
+//             child:  TextButton(
+//               onPressed: _loginOut,
+//               child: Image.asset('images/login_out.png',width: 80,height: 80,),
+//               // icon: Icon(Icons.login_rounded,size: 50,color: Colors.grey,),
+//               // child: Text(
+//               //   Constants.LOGIN_OUT,
+//               //   style: TextStyle(
+//               //       color: Colors.white, fontSize: TextSizeConfig.size20),
+//               // ),
+//               // splashColor: Colors.green,
+//             ),
+//           ),
 
-          // munuItem("版本号：", "1.0"),
-          // munuItem("我的待办：", "99"),
         ],
       ),
     );

@@ -51,7 +51,7 @@ class _HomePageState extends State {
         reverse: false,
         child: pages[currentIndex],
         duration: Duration(milliseconds: 500),
-        transitionBuilder: (child, animation, secondaryAnimation) =>SharedAxisTransition(child:child,animation: animation, secondaryAnimation: secondaryAnimation, transitionType: SharedAxisTransitionType.vertical,
+        transitionBuilder: (child, animation, secondaryAnimation) =>SharedAxisTransition(child:child,animation: animation, secondaryAnimation: secondaryAnimation, transitionType: SharedAxisTransitionType.horizontal,
 
       )),
       bottomNavigationBar: BottomNavigationBar(
@@ -59,11 +59,11 @@ class _HomePageState extends State {
         currentIndex: currentIndex,
         showSelectedLabels: true,
         unselectedItemColor: Colors.grey, //主要用于设置item及字体颜色
-        selectedItemColor: Colors.lightBlue, //主要用于设置item及字体颜色
+        selectedItemColor: Colors.black, //主要用于设置item及字体颜色
         unselectedFontSize: TextSizeConfig.size16,
         selectedFontSize: TextSizeConfig.size18,
         unselectedIconTheme: IconThemeData(color: Colors.grey),
-        selectedIconTheme: IconThemeData(color: Colors.lightBlue),
+        selectedIconTheme: IconThemeData(color: Colors.black),
         // showUnselectedLabels: false,
         items: [
           const BottomNavigationBarItem(

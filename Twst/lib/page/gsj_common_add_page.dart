@@ -8,6 +8,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:twst/base/baselist_page.dart';
 import 'package:twst/view/common_light_text_item.dart';
 
+import '../bean/eventbus.dart';
 import '../config/textsize.dart';
 import '../service/constans.dart';
 import '../service/dioclent.dart';
@@ -49,7 +50,7 @@ class GsjCommonAddPageState extends State<GsjCommonAddPage> {
   late bool isNetWorkAvailable = true;
   late bool showSearchBar = true;
   late bool showFlb = true;
-  bool _isOff = true; //相关组件显示隐藏控制，true代表隐藏
+  bool _isOff = false; //相关组件显示隐藏控制，true代表隐藏
   bool _checkValue = false; //总的复选框控制开关
   List agencyList = [];
   late String name;
@@ -74,7 +75,7 @@ class GsjCommonAddPageState extends State<GsjCommonAddPage> {
     String sql;
     String keynum;
     if(from=="borrow"){
-      sql=" and udlocation='${location}' and uddqsyqty>0";
+      sql=" and udlocation='${location}' and uddqsyqty>0 and uditemnum not in ( select uditemnum from udinvuseline where usetype='UDJY' and udinvusenum='${num}' ) ";
       keynum=Constants.GSJ_COMMON_ADD_LIST;
     }else{
       sql="and UDINVUSENUM='${num}' and USETYPE='UDJY' and STATUS='完成' and QUANTITY>nvl((select sum(QUANTITY) from UDINVUSELINE a where UDINVUSENUM='${num}' and USETYPE='UDGH' AND UDINVUSELINE.UDINVUSELINEID=a.udjyid),0)";
@@ -331,27 +332,43 @@ class GsjCommonAddPageState extends State<GsjCommonAddPage> {
                           value: bean['isSelected'],
                           onChanged: (value) {
                             if (value == false) {
-                              this.addList.remove(bean['uditemnum'].toString());
                               Map map={
                                 "UDINVUSENUM":num,
-                                "USETYPE":"UDJY",
+                                "USETYPE":from=="borrow"?"UDJY":"UDGH",
                                 "UDITEMNUM":bean['uditemnum'],
-                                "DESCRIPTION":bean['uddescription'],
+                                "DESCRIPTION":from=="borrow"?bean['uddescription']:bean['description'],
                                 "FROMSTORELOC":location,
-                                "UDDW":bean['udissueunit'],
-                                "FROMLOT":bean['udlotnum'],
+                                "UDDW":from=="borrow"?bean['udissueunit']:bean['uddw'],
+                                "FROMLOT":from=="borrow"?bean['udlotnum']:bean['fromlot'],
+                                "FROMBIN":bean['frombin'],
+                                if(from=="borrow")
+                                "QUANTITY":bean['uddqsyqty'],
+                                if(from=="back")
+                                  "QUANTITY":bean['quantity'],
+                                if(from=="back")
+                                  "UDINVUSELINENUM":bean['udinvuselinenum'],
+                                if(from=="back")
+                                  "UDJYID":bean['udjyid']
                               };
                               _list.remove(map);
                             } else {
-                              this.addList.add(bean['uditemnum'].toString());
                               Map map={
                                 "UDINVUSENUM":num,
-                                "USETYPE":"UDJY",
+                                "USETYPE":from=="borrow"?"UDJY":"UDGH",
                                 "UDITEMNUM":bean['uditemnum'],
-                                "DESCRIPTION":bean['uddescription'],
+                                "DESCRIPTION":from=="borrow"?bean['uddescription']:bean['description'],
                                 "FROMSTORELOC":location,
-                                "UDDW":bean['udissueunit'],
-                                "FROMLOT":bean['udlotnum'],
+                                "UDDW":from=="borrow"?bean['udissueunit']:bean['uddw'],
+                                "FROMLOT":from=="borrow"?bean['udlotnum']:bean['fromlot'],
+                                "FROMBIN":bean['frombin'],
+                                if(from=="borrow")
+                                  "QUANTITY":bean['uddqsyqty'],
+                                if(from=="back")
+                                  "QUANTITY":bean['quantity'],
+                                if(from=="back")
+                                  "UDINVUSELINENUM":bean['udinvuselinenum'],
+                                if(from=="back")
+                                  "UDJYID":bean['udjyid']
                               };
                               _list.add(map);
                             }
@@ -361,6 +378,7 @@ class GsjCommonAddPageState extends State<GsjCommonAddPage> {
                           },
                         ),
                       ),
+                      from=="borrow" ?
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -383,7 +401,7 @@ class GsjCommonAddPageState extends State<GsjCommonAddPage> {
                                 title: Constants.GSJ_DESC,
                                 titlecolor: Colors.black,
                                 titleSize: TextSizeConfig.size16,
-                                content: from=="borrow" ? bean["uddescription"]: bean["description"],
+                                content: bean["uddescription"],
                                 contentcolor: Colors.greenAccent,
                                 contentSize: TextSizeConfig.size18,
                                 searchInput: searchInput,
@@ -449,8 +467,10 @@ class GsjCommonAddPageState extends State<GsjCommonAddPage> {
 
                               Row(
                                 children: [
+                                  if(from=="borrow")
                                   Expanded(
                                     //库存总量
+
                                     child: CommonTextForm(
                                         title: Constants.STORE_TOTAL,
                                         titlecolor: Colors.black,
@@ -459,6 +479,121 @@ class GsjCommonAddPageState extends State<GsjCommonAddPage> {
                                         contentcolor: Colors.black,
                                         contentSize: TextSizeConfig.size16),
                                   ),
+                                  //当前剩余
+                                  Expanded(
+                                    child: CommonTextForm(
+                                        title: Constants.CURRENT_COUNT,
+                                        titlecolor: Colors.black,
+                                        titleSize: TextSizeConfig.size16,
+                                        content: bean["uddqsyqty"],
+                                        contentcolor: Colors.black,
+                                        contentSize: TextSizeConfig.size16),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ):Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              //编码
+                              CommonLightTextItem(
+                                title: Constants.GSJ_ITEM_NO,
+                                titlecolor: Colors.black,
+                                titleSize: TextSizeConfig.size16,
+                                content: bean["uditemnum"],
+                                contentcolor: Colors.greenAccent,
+                                contentSize: TextSizeConfig.size18,
+                                searchInput: searchInput,
+                                weight: FontWeight.bold,
+                              ),
+
+                              //描述
+                              CommonLightTextItem(
+                                title: Constants.GSJ_DESC,
+                                titlecolor: Colors.black,
+                                titleSize: TextSizeConfig.size16,
+                                content:  bean["description"],
+                                contentcolor: Colors.greenAccent,
+                                contentSize: TextSizeConfig.size18,
+                                searchInput: searchInput,
+                                weight: FontWeight.normal,
+                              ),
+                              //仓库
+                              CommonTextForm(
+                                  title: Constants.STOREHOUSE,
+                                  titlecolor: Colors.black,
+                                  titleSize: TextSizeConfig.size16,
+                                  content: bean["locdes"],
+                                  contentcolor: Colors.black,
+                                  contentSize: TextSizeConfig.size16),
+
+                              Row(
+                                children: [
+                                  //货位
+                                  Expanded(
+                                    child: CommonTextForm(
+                                        title: Constants.PRODUCT_LOCTION,
+                                        titlecolor: Colors.black,
+                                        titleSize: TextSizeConfig.size16,
+                                        content: bean["binname"],
+                                        contentcolor: Colors.black,
+                                        contentSize: TextSizeConfig.size16),
+                                  ),
+                                  //单位
+                                  Expanded(
+                                    child: CommonTextForm(
+                                        title: Constants.UNIT,
+                                        titlecolor: Colors.black,
+                                        titleSize: TextSizeConfig.size16,
+                                        content: bean["uddw"],
+                                        contentcolor: Colors.black,
+                                        contentSize: TextSizeConfig.size16),
+                                  ),
+                                ],
+                              ),
+
+                              //规格型号
+                              CommonLightTextItem(
+                                title: Constants.MODEL,
+                                titlecolor: Colors.black,
+                                titleSize: TextSizeConfig.size16,
+                                content: bean["udmodel"],
+                                contentcolor: Colors.greenAccent,
+                                contentSize: TextSizeConfig.size18,
+                                searchInput: searchInput,
+                                weight: FontWeight.normal,
+                              ),
+
+                              //负荷
+                              CommonLightTextItem(
+                                title: Constants.WORK_LOAD,
+                                titlecolor: Colors.black,
+                                titleSize: TextSizeConfig.size16,
+                                content: bean["udfh"],
+                                contentcolor: Colors.greenAccent,
+                                contentSize: TextSizeConfig.size18,
+                                searchInput: searchInput,
+                                weight: FontWeight.normal,
+                              ),
+
+                              Row(
+                                children: [
+                                  if(from=="borrow")
+                                    Expanded(
+                                      //库存总量
+
+                                      child: CommonTextForm(
+                                          title: Constants.STORE_TOTAL,
+                                          titlecolor: Colors.black,
+                                          titleSize: TextSizeConfig.size16,
+                                          content: bean["udcurbal"],
+                                          contentcolor: Colors.black,
+                                          contentSize: TextSizeConfig.size16),
+                                    ),
                                   //当前剩余
                                   Expanded(
                                     child: CommonTextForm(
@@ -537,12 +672,21 @@ class GsjCommonAddPageState extends State<GsjCommonAddPage> {
         //如果是选中，则将数据ID放入数组
         Map map={
           "UDINVUSENUM":num,
-          "USETYPE":"UDJY",
+          "USETYPE":from=="borrow"?"UDJY":"UDGH",
           "UDITEMNUM":element['uditemnum'],
-          "DESCRIPTION":element['uddescription'],
+          "DESCRIPTION":from=="borrow"?element['uddescription']:element['description'],
           "FROMSTORELOC":location,
-          "UDDW":element['udissueunit'],
-          "FROMLOT":element['udlotnum'],
+          "UDDW":from=="borrow"?element['udissueunit']:element['uddw'],
+          "FROMLOT":from=="borrow"?element['udlotnum']:element['fromlot'],
+          "FROMBIN":element['frombin'],
+          if(from=="borrow")
+            "QUANTITY":element['uddqsyqty'],
+          if(from=="back")
+            "QUANTITY":element['quantity'],
+          if(from=="back")
+            "UDINVUSELINENUM":element['udinvuselinenum'],
+          if(from=="back")
+          "UDJYID":element['udjyid']
         };
         _list.add(map);
 
@@ -561,13 +705,20 @@ class GsjCommonAddPageState extends State<GsjCommonAddPage> {
   }
 
   Future<void> commit(List<Map> list) async {
+    if(list.length==0){
+      EasyLoading.showInfo('请选择工属具');
+      return;
+    }
     DiaLogUtil.show(context, Colors.black12, "加载中...");
     String option = Constants.ADD;
     Map map = {
       "objectName": "UDINVUSE",
       "keyName": "UDINVUSENUM",
       "keyValue": num,
+      if(from=="borrow")
       "LineUDINVUSELINE":list,
+      if(from=="back")
+      "LineUDINVUSELINEGH":list,
     };
 
     try {
@@ -577,7 +728,12 @@ class GsjCommonAddPageState extends State<GsjCommonAddPage> {
         DiaLogUtil.disMiss(context);
         EasyLoading.showSuccess(resultMap['msg']);
         // getGsjList(true);
-        // eventBus.fire(EventA(  Constants.REFRESH_GSJ));
+        if(from=="borrow"){
+          eventBus.fire(EventA( Constants.REFRESH_GSJ_BORROW_LIST));
+        }else
+          eventBus.fire(EventA( Constants.REFRESH_GSJ_BACK_LIST));
+
+        Navigator.of(context).pop();
       } else {
         EasyLoading.showToast(resultMap['msg']);
         // DiaLogUtil.disMiss(context);

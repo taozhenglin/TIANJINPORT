@@ -27,6 +27,15 @@ class _MenuPageState extends State {
       const TabData(
           title: '工属具管理', icon: Icons.build, route: "/gsjtemporaryplanlist"),
       const TabData(
+          title: '预算管理', icon: Icons.build, route: "/gsjtemporaryplanlist"),
+      const TabData(
+          title: '采购管理', icon: Icons.build, route: "/gsjtemporaryplanlist"),
+      const TabData(
+          title: '设备台账', icon: Icons.build, route: "/gsjtemporaryplanlist"),
+      const TabData(
+          title: '项目管理', icon: Icons.build, route: "/gsjtemporaryplanlist"),
+
+      const TabData(
           title: '综合管理', icon: Icons.person, route: "/gsjtemporaryplanlist"),
       const TabData(
           title: '工单管理', icon: Icons.person, route: "/gsjtemporaryplanlist"),
@@ -52,12 +61,12 @@ class _MenuPageState extends State {
             bottom: TabBar(
               isScrollable: true,
               unselectedLabelColor: Colors.grey, //未选中字体颜色
-              labelColor: Colors.lightBlue, //选中字体颜色
+              labelColor: Colors.black, //选中字体颜色
               unselectedLabelStyle:
                   TextStyle(fontSize: TextSizeConfig.size16), //未选中字体大小
               labelStyle: TextStyle(
                   fontSize: TextSizeConfig.size18, fontWeight: FontWeight.bold),
-              indicatorColor: Colors.lightBlue, //指示器颜色
+              indicatorColor: Colors.black, //指示器颜色
               //选中字体大小
               tabs: datas.map((TabData data) {
                 return Tab(

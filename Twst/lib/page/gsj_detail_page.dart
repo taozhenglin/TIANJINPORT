@@ -22,6 +22,7 @@ import 'chooserecievebylistpage.dart';
 
 class GsjDetailPage extends StatefulWidget {
   final arguments;
+
   const GsjDetailPage({Key? key, required this.arguments}) : super(key: key);
 
   @override
@@ -31,39 +32,51 @@ class GsjDetailPage extends StatefulWidget {
   }
 }
 
-class GsjDetailPageState extends State<GsjDetailPage> {
-  List<Map> list=[];
-  late String desc;//描述
-  late String store='';//仓库
-  late String receiveby='';//领用人
-  late String receivetime='';//领用时间
-  late String sendtime='';//发放时间
-  late String udzydd='';//作业地点
-  late String udzyhl='';//分类
-  late String createdby='';//创建人
-  late String createdtime='';//创建时间
-  late String sitedec='';//地点
-  late String sendby='';//发放人
-  late String cost='';//成本
-  late String usedtype="";//使用情况
+class GsjDetailPageState extends State<GsjDetailPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+  List<Map> list = [];
+  late String desc; //描述
+  late String store = ''; //仓库
+  late String receiveby = ''; //领用人
+  late String receivetime = ''; //领用时间
+  late String sendtime = ''; //发放时间
+  late String udzydd = ''; //作业地点
+  late String udzyhl = ''; //分类
+  late String createdby = ''; //创建人
+  late String createdtime = ''; //创建时间
+  late String sitedec = ''; //地点
+  late String sendby = ''; //发放人
+  late String cost = ''; //成本
+  late String usedtype = ""; //使用情况
   TextEditingController descController = TextEditingController();
   TextEditingController _uPwdController = TextEditingController();
- late String name;
- late String displyName;
+  late String name;
+  late String displyName;
+  var listen;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     LogD('arguments==${widget.arguments}');
+    listen = eventBus.on<EventA>().listen((event) {
+      print("接受到关闭页面${event.str}");
+      if (event.str.isNotEmpty) {
+        if (event.str == Constants.CLOSE_PAGE) {
+          Navigator.of(context).pop();
+        }
+      }
+    });
     initData();
-
-
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -74,23 +87,26 @@ class GsjDetailPageState extends State<GsjDetailPage> {
               children: [
                 Expanded(
                   child: CommonTextForm(
-                      title: Constants.SYSTEM_NO,
-                      titlecolor: Colors.black,
-                      titleSize: TextSizeConfig.size16,
-                      content: widget.arguments['num'],
-                      contentcolor: Colors.black,
-                      contentSize: TextSizeConfig.size16,
+                    title: Constants.SYSTEM_NO,
+                    titlecolor: Colors.black,
+                    titleSize: TextSizeConfig.size16,
+                    content: widget.arguments['num'],
+                    contentcolor: Colors.black,
+                    contentSize: TextSizeConfig.size16,
                     weight: FontWeight.bold,
-
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.only(left: 12, top: 5, right: 12, bottom: 5),
+                  padding: const EdgeInsets.only(
+                      left: 12, top: 5, right: 12, bottom: 5),
                   decoration: const BoxDecoration(
-                    color: Colors.green,
-                      borderRadius: BorderRadius.all(Radius.circular(5))
+                      color: Colors.green,
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  child: Text(
+                    widget.arguments['status'],
+                    style: TextStyle(
+                        fontSize: TextSizeConfig.size16, color: Colors.white),
                   ),
-                  child: Text(widget.arguments['status'],style: TextStyle(fontSize: TextSizeConfig.size16,color: Colors.white),),
                 )
               ],
             ),
@@ -124,7 +140,7 @@ class GsjDetailPageState extends State<GsjDetailPage> {
                 title: Constants.CREATED_TIME,
                 titlecolor: Colors.black,
                 titleSize: TextSizeConfig.size16,
-                content:createdtime,
+                content: createdtime,
                 contentcolor: Colors.black,
                 contentSize: TextSizeConfig.size16),
           ),
@@ -135,7 +151,7 @@ class GsjDetailPageState extends State<GsjDetailPage> {
                 title: Constants.LOCATION,
                 titlecolor: Colors.black,
                 titleSize: TextSizeConfig.size16,
-                content:sitedec,
+                content: sitedec,
                 contentcolor: Colors.black,
                 contentSize: TextSizeConfig.size16),
           ),
@@ -146,7 +162,7 @@ class GsjDetailPageState extends State<GsjDetailPage> {
                 title: Constants.COST_PRICE,
                 titlecolor: Colors.black,
                 titleSize: TextSizeConfig.size16,
-                content:widget.arguments['udcbzj'],
+                content: widget.arguments['udcbzj'],
                 contentcolor: Colors.black,
                 contentSize: TextSizeConfig.size16),
           ),
@@ -198,18 +214,34 @@ class GsjDetailPageState extends State<GsjDetailPage> {
                   ),
                 ),
               ),
-             Container(
-               margin: EdgeInsets.only(right: 5),
-               width:25,
-               child: InkWell(child: Image.asset("images/commit.png",width: 25,height: 25,color: Colors.blueAccent,),onTap:(){
-                 if(widget.arguments['status']==Constants.FINISHED){
-                   EasyLoading.showError('已完成状态无法修改');
-                   return;
-                 }
-                 commit(description: descController.text, fromstoreloc: "", recipient: "", recipientdate: "", udissueddate: "", udzydd: "", udzyhl: "");
-               } ,),
-             )
-
+              Container(
+                margin: EdgeInsets.only(right: 5),
+                width: 25,
+                child: InkWell(
+                  child: Image.asset(
+                    "images/commit.png",
+                    width: 25,
+                    height: 25,
+                    color: Colors.blueAccent,
+                  ),
+                  onTap: () {
+                    if (widget.arguments['status'] == Constants.ADD_NEW_ONE ||
+                        widget.arguments['status'] == Constants.REJECTED) {
+                      commit(
+                          description: descController.text,
+                          fromstoreloc: "",
+                          recipient: "",
+                          recipientdate: "",
+                          udissueddate: "",
+                          udzydd: "",
+                          udzyhl: "");
+                    } else
+                      EasyLoading.showError(
+                          Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
+                    return;
+                  },
+                ),
+              )
             ],
           ),
 //仓库
@@ -217,19 +249,29 @@ class GsjDetailPageState extends State<GsjDetailPage> {
             icon: "images/must_fill.png",
             title: Constants.STOREHOUSE,
             onPressed: () async {
-              if(widget.arguments['status']==Constants.FINISHED){
-                EasyLoading.showError('已完成状态无法修改');
+              if (widget.arguments['status'] != Constants.ADD_NEW_ONE) {
+                EasyLoading.showError(
+                    Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
                 return;
               }
               final result = await Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => ChooseRecieveByListPage(tag:'store')));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ChooseRecieveByListPage(tag: 'store')));
               LogD('result=${result}');
               setState(() {
-                store=result['DESCRIPTION'];
+                store = result['DESCRIPTION'];
               });
 
-              commit(description:"", fromstoreloc:result['LOCATION'], recipient:"", recipientdate:"", udissueddate:"", udzydd:"", udzyhl:"");
-
+              commit(
+                  description: "",
+                  fromstoreloc: result['LOCATION'],
+                  recipient: "",
+                  recipientdate: "",
+                  udissueddate: "",
+                  udzydd: "",
+                  udzyhl: "");
             },
             flag: 1,
             note: store,
@@ -240,19 +282,29 @@ class GsjDetailPageState extends State<GsjDetailPage> {
             icon: "images/person.png",
             title: Constants.RECIEVE_BY,
             onPressed: () async {
-              if(widget.arguments['status']==Constants.FINISHED){
-                EasyLoading.showError('已完成状态无法修改');
+              if (widget.arguments['status'] != Constants.ADD_NEW_ONE) {
+                EasyLoading.showError(
+                    Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
                 return;
               }
               final result = await Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => ChooseRecieveByListPage(tag:'recieve')));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ChooseRecieveByListPage(tag: 'recieve')));
               LogD('result=${result}');
               setState(() {
-                receiveby=result['DISPLAYNAME'];
+                receiveby = result['DISPLAYNAME'];
               });
 
-              commit(description:"", fromstoreloc:"", recipient:result['PERSONID'], recipientdate:"", udissueddate:"", udzydd:"", udzyhl:"");
-
+              commit(
+                  description: "",
+                  fromstoreloc: "",
+                  recipient: result['PERSONID'],
+                  recipientdate: "",
+                  udissueddate: "",
+                  udzydd: "",
+                  udzyhl: "");
             },
             flag: 1,
             note: receiveby,
@@ -263,8 +315,9 @@ class GsjDetailPageState extends State<GsjDetailPage> {
             icon: "images/calendar.png",
             title: Constants.RECIEVE_DATE,
             onPressed: () {
-              if(widget.arguments['status']==Constants.FINISHED){
-                EasyLoading.showError('已完成状态无法修改');
+              if (widget.arguments['status'] != Constants.ADD_NEW_ONE) {
+                EasyLoading.showError(
+                    Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
                 return;
               }
               Pickers.showDatePicker(context,
@@ -298,17 +351,23 @@ class GsjDetailPageState extends State<GsjDetailPage> {
                             topRight: Radius.circular(10)),
                       ),
                       backgroundColor: Colors.white,
-                      textColor: Colors.black87),
-                  onConfirm: ( p) {
+                      textColor: Colors.black87), onConfirm: (p) {
                 LogD('返回${p.year}-${p.month}-${p.day} ${p.hour}:${p.minute}');
 
                 setState(() {
-                  receivetime='${p.year}-${p.month}-${p.day} ${p.hour}:${p.minute}';
+                  receivetime =
+                      '${p.year}-${p.month}-${p.day} ${p.hour}:${p.minute}';
                 });
 
-                commit(description:"", fromstoreloc:"", recipient:"", recipientdate:receivetime, udissueddate:"", udzydd:"", udzyhl:"");
-
-                  });
+                commit(
+                    description: "",
+                    fromstoreloc: "",
+                    recipient: "",
+                    recipientdate: receivetime,
+                    udissueddate: "",
+                    udzydd: "",
+                    udzyhl: "");
+              });
             },
             flag: 1,
             note: receivetime,
@@ -319,8 +378,9 @@ class GsjDetailPageState extends State<GsjDetailPage> {
             icon: "images/calendar.png",
             title: Constants.SEND_TO_DATE,
             onPressed: () {
-              if(widget.arguments['status']==Constants.FINISHED){
-                EasyLoading.showError('已完成状态无法修改');
+              if (widget.arguments['status'] != Constants.ADD_NEW_ONE) {
+                EasyLoading.showError(
+                    Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
                 return;
               }
               Pickers.showDatePicker(context,
@@ -354,15 +414,21 @@ class GsjDetailPageState extends State<GsjDetailPage> {
                             topRight: Radius.circular(10)),
                       ),
                       backgroundColor: Colors.white,
-                      textColor: Colors.black87),
-                  onConfirm: ( p) {
-                    LogD('返回${p.year}-${p.month}-${p.day} ${p.hour}:${p.minute}');
-                    setState(() {
-                      sendtime='${p.year}-${p.month}-${p.day} ${p.hour}:${p.minute}';
-                    });
-                    commit(description:"", fromstoreloc:"", recipient:"", recipientdate:"", udissueddate:sendtime, udzydd:"", udzyhl:"");
-
-                  });
+                      textColor: Colors.black87), onConfirm: (p) {
+                LogD('返回${p.year}-${p.month}-${p.day} ${p.hour}:${p.minute}');
+                setState(() {
+                  sendtime =
+                      '${p.year}-${p.month}-${p.day} ${p.hour}:${p.minute}';
+                });
+                commit(
+                    description: "",
+                    fromstoreloc: "",
+                    recipient: "",
+                    recipientdate: "",
+                    udissueddate: sendtime,
+                    udzydd: "",
+                    udzyhl: "");
+              });
             },
             flag: 1,
             note: sendtime,
@@ -373,6 +439,11 @@ class GsjDetailPageState extends State<GsjDetailPage> {
             icon: "images/location.png",
             title: Constants.WORK_LOCATION,
             onPressed: () {
+              if (widget.arguments['status'] != Constants.ADD_NEW_ONE) {
+                EasyLoading.showError(
+                    Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
+                return;
+              }
               showModalBottomSheet(
                   backgroundColor: Colors.transparent,
                   builder: (BuildContext context) {
@@ -389,6 +460,11 @@ class GsjDetailPageState extends State<GsjDetailPage> {
             icon: "images/category.png",
             title: Constants.WORK_TYPE,
             onPressed: () {
+              if (widget.arguments['status'] != Constants.ADD_NEW_ONE) {
+                EasyLoading.showError(
+                    Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
+                return;
+              }
               showModalBottomSheet(
                   backgroundColor: Colors.transparent,
                   builder: (BuildContext context) {
@@ -416,8 +492,6 @@ class GsjDetailPageState extends State<GsjDetailPage> {
           //   note: usedtype,
           //   // color: Colors.red,
           // ),
-
-
         ],
       ),
     );
@@ -427,67 +501,62 @@ class GsjDetailPageState extends State<GsjDetailPage> {
     //登陆手机号
     name = await DataUtils.getString("loginname");
     //展示中文名
-    displyName= await DataUtils.getString("username");
+    displyName = await DataUtils.getString("username");
     setState(() {
-      desc=widget.arguments['desc'];
-      descController.text=desc;
-      store=widget.arguments['locdes'];
-      receiveby=widget.arguments['recipient'];
-      receivetime=widget.arguments['recipientdate'];
-      sendtime=widget.arguments['udissueddate'];
+      desc = widget.arguments['desc'];
+      descController.text = desc;
+      store = widget.arguments['locdes'];
+      receiveby = widget.arguments['recipient'];
+      receivetime = widget.arguments['recipientdate'];
+      sendtime = widget.arguments['udissueddate'];
       udzydd = widget.arguments['udzydd'];
       udzyhl = widget.arguments['udzyhl'];
       createdby = widget.arguments['udissuedby'];
-      createdtime= widget.arguments['requesteddate'];
-      sitedec= widget.arguments['sitedec'];
+      createdtime = widget.arguments['requesteddate'];
+      sitedec = widget.arguments['sitedec'];
     });
-
-
-  
-
-
-
-
-
   }
 
-  Future<void> commit({required String description, required String fromstoreloc, required String recipient, required String recipientdate, required String udissueddate, required String udzydd, required String udzyhl}) async {
-
+  Future<void> commit(
+      {required String description,
+      required String fromstoreloc,
+      required String recipient,
+      required String recipientdate,
+      required String udissueddate,
+      required String udzydd,
+      required String udzyhl}) async {
+    list.clear();
     DiaLogUtil.show(context, Colors.black12, "加载中...");
     String option = Constants.MODIFY;
     Map map = {
-      "objectName":"UDINVUSE",
-      "keyName":"UDINVUSENUM",
+      "objectName": "UDINVUSE",
+      "keyName": "UDINVUSENUM",
       "keyValue": widget.arguments['num'],
-      if(description.isNotEmpty)
-      "description":description,
-      if(fromstoreloc.isNotEmpty)
-      "FROMSTORELOC":fromstoreloc,
-      if(recipient.isNotEmpty)
-      "RECIPIENT":recipient,
-      if(recipientdate.isNotEmpty)
-      "RECIPIENTDATE":recipientdate,
-      if(udissueddate.isNotEmpty)
-      "UDISSUEDDATE":udissueddate,
-      if(udzydd.isNotEmpty)
-      "UDZYDD":udzydd,
-      if(udzyhl.isNotEmpty)
-      "UDZYHL":udzyhl
+      if (description.isNotEmpty) "description": description,
+      if (fromstoreloc.isNotEmpty) "FROMSTORELOC": fromstoreloc,
+      if (recipient.isNotEmpty) "RECIPIENT": recipient,
+      if (recipientdate.isNotEmpty) "RECIPIENTDATE": recipientdate,
+      if (udissueddate.isNotEmpty) "UDISSUEDDATE": udissueddate,
+      if (udzydd.isNotEmpty) "UDZYDD": udzydd,
+      if (udzyhl.isNotEmpty) "UDZYHL": udzyhl
     };
     list.add(map);
 
-    try{
+    try {
       Map<String, dynamic> resultMap =
           await DioClient.DioPost2('${name}', option, list);
       if (resultMap['code'] == Constants.CODE_OK) {
         DiaLogUtil.disMiss(context);
         EasyLoading.showSuccess(resultMap['msg']);
-        eventBus.fire(EventA(  Constants.REFRESH_GSJ));
-      }else{
+        eventBus.fire(EventA(Constants.REFRESH_GSJ));
+        if (fromstoreloc.isNotEmpty) {
+          eventBus.fire(EventC(Constants.REFRESH_GSJ_LOCATION, fromstoreloc));
+        }
+      } else {
         EasyLoading.showToast(resultMap['msg']);
         // DiaLogUtil.disMiss(context);
       }
-      }catch(e){
+    } catch (e) {
       LogE(e.toString());
       DiaLogUtil.disMiss(context);
     }

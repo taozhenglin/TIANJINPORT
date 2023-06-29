@@ -5,6 +5,7 @@ class Constants {
   static String MODIFY="MODIFY";
   static String ADD="ADD";
   static String DELETE="DELETE";
+  static String UDJYCJ="UDJYCJ";
   static String ADD_NEW_ONE='新建';
   static String WAIT_TO_BACK="待归还";
   static String PART_OF_BACK="部分归还";
@@ -76,12 +77,14 @@ class Constants {
   static String SELECT_ALL="全选";
   static String UN_SELECT_ALL="全不选";
   static String HAS_PERMINTED = "已批准";
+  static String AGREE="同意";
   static String REJECTED = "驳回";
   static String HAS_REJECTED = "已驳回";
-  static String CURRENT_STATUE_MCOUND_NOT_OPERATE="当前状态无法操作";
+  static String CURRENT_STATUE_COUND_NOT_OPERATE="当前状态无法操作";
   static String WAIT_CHECK="等待检查";
   static String PERMINTED = "批准";
   static String START_PROCESS = "发起流程";
+  static String APPROVE_PROCESS = "流程审批";
   static String CJ_NUM = "承接号：";
   static String CJ_COUNT = "承接数量：";
   static String CJ_LOATION = "承接地点：";
@@ -109,10 +112,22 @@ class Constants {
   static String CURRENT_COUNT="当前剩余：";
   static String CHOOSE_GSJ="选择工属具";
   static String LOGIN_TIME="登录时间";
+static String PLEASE_FILL_IN_THE_REJECTION_CONTENT="请输入驳回原因";
+  static String PLEASE_FILL_IN_REMARKS="请填写备注";
+  static String APPROVE = "WF";
+  static String SURE_DELETE="确定删除？";
+  static String CLOSE_PAGE="CLOSE_PAGE";
+  static String COUNT_SHOULD_MORE_THEN_ZERO='数量必须大于 0';
+  static String COUNT_SHOULD_NOT_BE_EMPTY="数量不能为空";
+
+
 
 
 
   static String REFRESH_GSJ="刷新工属具列表";
+  static String REFRESH_GSJ_LOCATION="刷新工属具仓库";
+  static String REFRESH_GSJ_BORROW_LIST="刷新工属具借用列表";
+  static String REFRESH_GSJ_BACK_LIST="刷新工属具归还列表";
   static bool ISNETWORKAVAILABLE = true;
   static String GSJ_LIST = "1001";
   static String GSJ_BORROW_BACK_LIST = "1002";

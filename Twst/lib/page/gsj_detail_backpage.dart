@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:twst/tools/keybord.dart';
 import 'package:twst/tools/logutils.dart';
 
 import '../base/baselist_fragment.dart';
@@ -40,6 +41,8 @@ class GsjDetailBackPageState extends BaseListFragmentWithFlbState {
   late String num;
   late String location;
   late String statue;
+  var listen;
+
   GsjDetailBackPageState(this.num, this.location, this.statue);
   @override
   void onRefresh() {
@@ -60,6 +63,26 @@ class GsjDetailBackPageState extends BaseListFragmentWithFlbState {
     // TODO: implement initState
     super.initState();
     LogD('num=${num}');
+    listen = eventBus.on<EventA>().listen((event) {
+      print("接受到刷新${event.str}");
+      if (event.str.isNotEmpty) {
+        if(event.str==Constants.REFRESH_GSJ_BACK_LIST){
+          getGsjList(true);
+        }
+      }
+    });
+    listen = eventBus.on<EventC>().listen((event) {
+      print("接受到刷新${event.str}");
+      if (event.str.isNotEmpty) {
+        if(event.str==Constants.REFRESH_GSJ_LOCATION){
+          setState(() {
+            location=event.content;
+          });
+
+        }
+      }
+    });
+
     Future.delayed(const Duration(microseconds: 300), () {
       getGsjList(true);
     });
@@ -224,6 +247,8 @@ class GsjDetailBackPageState extends BaseListFragmentWithFlbState {
                           titleSize: TextSizeConfig.size16,
                           imageSize: 25,
                           content: agencyList[index]["quantity"],
+                          keyBoardtype: TextInputType.number,
+                          maxvalue: agencyList[index]["uddqsyqty"],
                           hint: '请输入归还数量',
                           callback: (s) {
                             //主表带归还/部分归还/驳回
@@ -236,12 +261,12 @@ class GsjDetailBackPageState extends BaseListFragmentWithFlbState {
                                 } else
                                   modfy(s, agencyList[index]['udyjid']);
                               } else {
-                                EasyLoading.showInfo(Constants.CURRENT_STATUE_MCOUND_NOT_OPERATE);
+                                EasyLoading.showInfo(Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
                               }
                             } else {
-                              EasyLoading.showInfo(Constants.CURRENT_STATUE_MCOUND_NOT_OPERATE);
+                              EasyLoading.showInfo(Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
                             }
-                          },
+                          }, flag: 2,
                         ),
 
                         //发放单位
@@ -309,14 +334,14 @@ class GsjDetailBackPageState extends BaseListFragmentWithFlbState {
                                     onPressed: () {
                                       Navigator.of(context).pop("yes");
                                       removeItem(agencyList[index]['udyjid']);
-                                    },
+                                    },  warm: Constants.SURE_DELETE,
                                   );
                                 });
                           }else{
-                            EasyLoading.showInfo(Constants.CURRENT_STATUE_MCOUND_NOT_OPERATE);
+                            EasyLoading.showInfo(Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
                           }
                         }else
-                          EasyLoading.showInfo(Constants.CURRENT_STATUE_MCOUND_NOT_OPERATE);
+                          EasyLoading.showInfo(Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
                       }, icon: const Icon(Icons.delete,size: 40,color: Colors.black54,),
                       ),
                     ),
@@ -357,6 +382,7 @@ class GsjDetailBackPageState extends BaseListFragmentWithFlbState {
         DiaLogUtil.disMiss(context);
         EasyLoading.showSuccess(resultMap['msg']);
         getGsjList(true);
+        KeyBordUtil.hidekeybord(context);
         // eventBus.fire(EventA(  Constants.REFRESH_GSJ));
       } else {
         EasyLoading.showToast(resultMap['msg']);
@@ -382,12 +408,13 @@ class GsjDetailBackPageState extends BaseListFragmentWithFlbState {
       Map<String, dynamic> resultMap =
       await DioClient.DioPost2('${name}', option, list);
       if (resultMap['code'] == Constants.CODE_OK) {
+        getGsjList(true);
         DiaLogUtil.disMiss(context);
         EasyLoading.showSuccess(resultMap['msg']);
         // eventBus.fire(EventA(  Constants.REFRESH_GSJ));
       } else {
         EasyLoading.showToast(resultMap['msg']);
-        // DiaLogUtil.disMiss(context);
+        DiaLogUtil.disMiss(context);
       }
     } catch (e) {
       LogE(e.toString());

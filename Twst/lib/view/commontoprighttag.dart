@@ -62,7 +62,7 @@ class CommonTopRightTag extends StatelessWidget {
         padding: const EdgeInsets.only(left: 12, right: 12,top: 3, bottom: 4),
         margin: EdgeInsets.only(top: 8,right: 8,bottom: 5),
         decoration: const BoxDecoration(
-          color: Colors.blueGrey,
+          color: Colors.black,
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
             // gradient:

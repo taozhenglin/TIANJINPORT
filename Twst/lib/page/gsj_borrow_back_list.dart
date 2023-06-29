@@ -5,6 +5,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:twst/service/constans.dart';
 import 'package:twst/tools/golbal_refresh.dart';
 import 'package:twst/tools/logutils.dart';
+import 'package:twst/view/common_light_text_item.dart';
 import '../base/baselist_page_with_flb.dart';
 import '../bean/eventbus.dart';
 import '../config/textsize.dart';
@@ -171,65 +172,70 @@ class GsjBorrowBackListState extends BaseListPageWithFlbState {
                               ],
                             ),
                             //创建人
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  Constants.CREATED_BY,
-                                  style: TextStyle(
-                                    fontSize: TextSizeConfig.size16,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                Text(
-                                  agencyList[index]["requestedby"],
-                                  style: TextStyle(
-                                    fontSize: TextSizeConfig.size16,
-                                    color: Colors.black,
-                                  ),
-                                )
-                              ],
-                            ),
+                            // Row(
+                            //   crossAxisAlignment: CrossAxisAlignment.center,
+                            //   children: [
+                            //     Text(
+                            //       Constants.CREATED_BY,
+                            //       style: TextStyle(
+                            //         fontSize: TextSizeConfig.size16,
+                            //         color: Colors.black87,
+                            //       ),
+                            //     ),
+                            //     Text(
+                            //       agencyList[index]["requestedby"],
+                            //       style: TextStyle(
+                            //         fontSize: TextSizeConfig.size16,
+                            //         color: Colors.black,
+                            //       ),
+                            //     )
+                            //   ],
+                            // ),
+                            CommonLightTextItem(title: Constants.CREATED_BY, titlecolor: Colors.black87, titleSize: TextSizeConfig.size16, content: agencyList[index]["requestedby"], contentcolor: Colors.cyanAccent, contentSize: TextSizeConfig.size18, searchInput: searchInput,),
                             //创建人部门
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  Constants.CREATED_DEPT,
-                                  style: TextStyle(
-                                    fontSize: TextSizeConfig.size16,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                Text(
-                                  agencyList[index]["dept"],
-                                  style: TextStyle(
-                                    fontSize: TextSizeConfig.size16,
-                                    color: Colors.black,
-                                  ),
-                                )
-                              ],
-                            ),
+                            CommonLightTextItem(title: Constants.CREATED_DEPT, titlecolor: Colors.black87, titleSize: TextSizeConfig.size16, content: agencyList[index]["dept"], contentcolor: Colors.cyanAccent, contentSize: TextSizeConfig.size18, searchInput: searchInput,),
+
+                            // Row(
+                            //   crossAxisAlignment: CrossAxisAlignment.center,
+                            //   children: [
+                            //     Text(
+                            //       Constants.CREATED_DEPT,
+                            //       style: TextStyle(
+                            //         fontSize: TextSizeConfig.size16,
+                            //         color: Colors.black87,
+                            //       ),
+                            //     ),
+                            //     Text(
+                            //       agencyList[index]["dept"],
+                            //       style: TextStyle(
+                            //         fontSize: TextSizeConfig.size16,
+                            //         color: Colors.black,
+                            //       ),
+                            //     )
+                            //   ],
+                            // ),
                             //仓库
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  Constants.STOREHOUSE,
-                                  style: TextStyle(
-                                    fontSize: TextSizeConfig.size16,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                Text(
-                                  agencyList[index]["locdes"],
-                                  style: TextStyle(
-                                    fontSize: TextSizeConfig.size16,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
+                            CommonLightTextItem(title: Constants.STOREHOUSE, titlecolor: Colors.black87, titleSize: TextSizeConfig.size16, content: agencyList[index]["locdes"], contentcolor: Colors.cyanAccent, contentSize: TextSizeConfig.size18, searchInput: searchInput,),
+
+                            // Row(
+                            //   crossAxisAlignment: CrossAxisAlignment.center,
+                            //   children: [
+                            //     Text(
+                            //       Constants.STOREHOUSE,
+                            //       style: TextStyle(
+                            //         fontSize: TextSizeConfig.size16,
+                            //         color: Colors.black87,
+                            //       ),
+                            //     ),
+                            //     Text(
+                            //       agencyList[index]["locdes"],
+                            //       style: TextStyle(
+                            //         fontSize: TextSizeConfig.size16,
+                            //         color: Colors.black,
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
                             //地点
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -309,7 +315,7 @@ class GsjBorrowBackListState extends BaseListPageWithFlbState {
       endPage = Constants.END_PAGE;
     }
     String option = Constants.READ;
-    Map json = {
+    Map map = {
       "keyNum": Constants.GSJ_LIST,
       "sqlWhere": " and siteid='${siteid}' ",
       "sinorSearch": search,
@@ -318,7 +324,7 @@ class GsjBorrowBackListState extends BaseListPageWithFlbState {
     };
     try {
       Map<String, dynamic> resultMap =
-          await DioClient.DioPost('${name}', option, json);
+          await DioClient.DioPost('${name}', option, map);
       if (resultMap['code'] == Constants.CODE_OK) {
         // DiaLogUtil.disMiss(context);
         Constants.ISNETWORKAVAILABLE = true;

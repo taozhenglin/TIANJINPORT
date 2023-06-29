@@ -1,4 +1,9 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:package_info/package_info.dart';
+
 import 'logutils.dart';
 
 class AppInfoUtils {
@@ -43,5 +48,29 @@ class AppInfoUtils {
     _version = packageInfo.version;
     LogD("_version=" + _version);
     return _version;
+  }
+  //是否支持桌面图标消息小红点
+  static Future<bool> isSupportBadge() async {
+    //1判断是否支持
+    bool isSupport = await FlutterAppBadger.isAppBadgeSupported();
+    return isSupport;
+  }
+
+  static Future<String> getDeviceType() async {
+    AndroidDeviceInfo androidInfo;
+    IosDeviceInfo iosInfo;
+    String model;
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      androidInfo = await deviceInfo.androidInfo;
+      model = androidInfo.model;
+      LogD('model==${model}');
+      return model;
+    } else {
+      //如果需要判断ios的具体机型还需作进一步判断
+      //  iosInfo = await deviceInfo.iosInfo;
+      // model=iosInfo.model;
+      return 'IOS';
+    }
   }
 }

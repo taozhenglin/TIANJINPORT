@@ -1,19 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:twst/view/common_dialog.dart';
 import 'package:twst/view/common_text_input_item.dart';
 import 'package:twst/view/commontextform.dart';
 
-import '../base/baselist_fragment.dart';
 import '../base/baselist_fragment_with_flb.dart';
+import '../bean/eventbus.dart';
 import '../config/textsize.dart';
 import '../service/constans.dart';
 import '../service/dioclent.dart';
 import '../tools/datautil.dart';
 import '../tools/dialogutil.dart';
 import '../tools/logutils.dart';
-import '../view/common_icontext_item.dart';
 import '../view/commontoprighttag.dart';
 import 'gsj_common_add_page.dart';
 
@@ -36,12 +34,13 @@ class GsjDetailBorrowPageState extends BaseListFragmentWithFlbState {
   List<Map> list = [];
   List agencyList = [];
   late String name;
-  late String num;
+  late String no;
   late String location;
   late String statue = '';
+  var listen;
   TextEditingController quityController = TextEditingController();
 
-  GsjDetailBorrowPageState(this.num, this.location, this.statue);
+  GsjDetailBorrowPageState(this.no, this.location, this.statue);
 
   @override
   void onRefresh() {
@@ -61,7 +60,26 @@ class GsjDetailBorrowPageState extends BaseListFragmentWithFlbState {
   void initState() {
     // TODO: implement initState
     super.initState();
-    LogD('num=${num}');
+    LogD('num=${no}');
+    listen = eventBus.on<EventA>().listen((event) {
+      print("接受到刷新${event.str}");
+      if (event.str.isNotEmpty) {
+        if(event.str==Constants.REFRESH_GSJ_BORROW_LIST){
+          getGsjList(true);
+        }
+      }
+    });
+    listen = eventBus.on<EventC>().listen((event) {
+      print("接受到刷新${event.str}");
+      if (event.str.isNotEmpty) {
+        if(event.str==Constants.REFRESH_GSJ_LOCATION){
+          setState(() {
+            location=event.content;
+          });
+
+        }
+      }
+    });
     Future.delayed(Duration(microseconds: 300), () {
       getGsjList(true);
     });
@@ -84,9 +102,9 @@ class GsjDetailBorrowPageState extends BaseListFragmentWithFlbState {
     String option = Constants.READ;
     Map json = {
       "keyNum": Constants.GSJ_BORROW_BACK_LIST,
-      "sqlWhere": " and UDINVUSENUM='${num}' and USETYPE='UDJY' ",
+      "sqlWhere": " and UDINVUSENUM='${no}' and USETYPE='UDJY' ",
       "sinorSearch": '',
-      "keysearch": "keyValue:1",
+      // "keysearch": "keyValue:1",
       "startRow": startPage,
       "endRow": endPage
     };
@@ -223,24 +241,30 @@ class GsjDetailBorrowPageState extends BaseListFragmentWithFlbState {
                           imageSize: 25,
                           content: agencyList[index]["quantity"],
                           hint: '请输入借用数量',
+                          keyBoardtype: TextInputType.number,
+                          maxvalue: agencyList[index]["uddqsyqty"],
+                          statue1: statue,
+                          statue2: agencyList[index]['status'],
                           callback: (s) {
                             //主表新建/驳回
                             if (statue == Constants.ADD_NEW_ONE|| statue == Constants.REJECTED) {
                               //子表 等待检查
                               if (agencyList[index]['status'] == Constants.WAIT_CHECK) {
                                 if (s.isEmpty) {
-                                  EasyLoading.showInfo('请输入借用数量');
+                                  EasyLoading.showInfo(Constants.COUNT_SHOULD_NOT_BE_EMPTY);
                                   return;
-                                } else
-                                  EasyLoading.showInfo(s);
-                                modfy(s,agencyList[index]['udyjid']);
+                                } else   if(num.parse(s)<=0){
+                                  EasyLoading.showInfo(Constants.COUNT_SHOULD_MORE_THEN_ZERO);
+                                }else {
+                                  modfy(s,agencyList[index]['udyjid']);
+                                }
                               } else {
-                                EasyLoading.showInfo(Constants.CURRENT_STATUE_MCOUND_NOT_OPERATE);
+                                EasyLoading.showInfo(Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
                               }
                             } else {
-                              EasyLoading.showInfo(Constants.CURRENT_STATUE_MCOUND_NOT_OPERATE);
+                              EasyLoading.showInfo(Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
                             }
-                          },
+                          }, flag: 1,
                         ),
 
 
@@ -309,13 +333,13 @@ class GsjDetailBorrowPageState extends BaseListFragmentWithFlbState {
                                       onPressed: () {
                                         Navigator.of(context).pop("yes");
                                         removeItem(agencyList[index]['udyjid']);
-                                      },
+                                      }, warm: Constants.SURE_DELETE,
                                     );
                                   });                            }else{
-                              EasyLoading.showInfo(Constants.CURRENT_STATUE_MCOUND_NOT_OPERATE);
+                              EasyLoading.showInfo(Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
                             }
                           }else
-                            EasyLoading.showInfo(Constants.CURRENT_STATUE_MCOUND_NOT_OPERATE);
+                            EasyLoading.showInfo(Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
 
 
                         },
@@ -338,7 +362,7 @@ class GsjDetailBorrowPageState extends BaseListFragmentWithFlbState {
     if (statue == "新建" || statue == "驳回") {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => GsjCommonAddPage(
-            num:num,
+            num:no,
                 location: location,
             from:"borrow"
               )));
@@ -393,10 +417,11 @@ class GsjDetailBorrowPageState extends BaseListFragmentWithFlbState {
       if (resultMap['code'] == Constants.CODE_OK) {
         DiaLogUtil.disMiss(context);
         EasyLoading.showSuccess(resultMap['msg']);
+        getGsjList(true);
         // eventBus.fire(EventA(  Constants.REFRESH_GSJ));
       } else {
         EasyLoading.showToast(resultMap['msg']);
-        // DiaLogUtil.disMiss(context);
+        DiaLogUtil.disMiss(context);
       }
     } catch (e) {
       LogE(e.toString());

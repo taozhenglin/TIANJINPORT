@@ -11,3 +11,9 @@ class EventA {
   EventA(this.str);
 
 }
+class EventC {
+  String str;
+  String content;
+  EventC(this.str,this.content);
+
+}
