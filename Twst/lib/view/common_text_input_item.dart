@@ -86,7 +86,7 @@ class CommonTextInputForm extends StatelessWidget {
               decoration: InputDecoration(
                 // errorText: '注意：提交数量不得大于可用数量',
 
-                labelText: flag==1 ? '注意：提交数量不得大于可用数量 ${maxvalue}':'',
+                labelText: flag==1 ? '最大可用数量： ${maxvalue}':'',
                 labelStyle: TextStyle(color: Colors.red,fontSize: TextSizeConfig.size12),
                 filled: true,
                 isCollapsed: true,

@@ -205,15 +205,24 @@ class GsjBorrowBackDetailPageState extends State<GsjBorrowBackDetailPage>
              objectName: "UDINVUSE",
              processName: "UDGSJJYGH",
              sqlWhere: "and UDINVUSENUM='${widget.arguments['data']['num']}'",
-             flag: widget.arguments['data']['status'] == Constants.ADD_NEW_ONE
-                 ? 1
-                 : 2,
+             flag: 1,
            );
          }
            ,);
        }
      });
 
+    }else{
+      showDialog(context: context, builder: (BuildContext context) {
+        return CommonProcessDialog(
+          passCall: (e) {},
+          objectName: "UDINVUSE",
+          processName: "UDGSJJYGH",
+          sqlWhere: "and UDINVUSENUM='${widget.arguments['data']['num']}'",
+          flag: 2,
+        );
+      }
+        ,);
     }
 
   }
@@ -234,6 +243,7 @@ class GsjBorrowBackDetailPageState extends State<GsjBorrowBackDetailPage>
       if (resultMap['code'] == Constants.CODE_OK) {
         DiaLogUtil.disMiss(context);
         EasyLoading.showSuccess(resultMap['msg']);
+        Navigator.of(context).pop();
       } else {
         EasyLoading.showToast(resultMap['msg']);
         DiaLogUtil.disMiss(context);

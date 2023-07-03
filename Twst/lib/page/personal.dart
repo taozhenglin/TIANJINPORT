@@ -16,6 +16,7 @@ import 'package:twst/view/common_updown_text_item.dart';
 import 'package:twst/view/marqueetext.dart';
 
 import '../config/textsize.dart';
+import '../main.dart';
 import '../tools/colorutil.dart';
 import '../tools/datautil.dart';
 
@@ -371,6 +372,9 @@ class _PersonPageState extends State {
   void _loginOut() {
     // ToastUtils.shotToast('退出登录‘’‘’‘’‘’‘');
     Navigator.pushNamed(context, '/login');
+    // var context = gloableKey.currentState!.overlay!.context;
+    // this.showCupertinoDialog(context);
+
   }
 
   Widget _leading(BuildContext context) {
@@ -707,5 +711,38 @@ class _PersonPageState extends State {
     EasyLoading.showSuccess(Constants.CASH_CLEANED);
     // 删除极光别名
     //jPush.deleteAlias().then((map) {});
+  }
+
+  void showCupertinoDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        // barrierColor: Color(0xFF1B1B1B),
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            title: Image(
+              image: AssetImage('images/login_out.png'),
+              width: 40,
+              height: 40,
+            ),
+            content: Text(
+              '\n您的账号在另一台设备上登录，\n您已被登出',
+              style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600),
+            ),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                textStyle:
+                TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+                child: Text('确定'),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  Navigator.pushNamed(context, '/login');
+                  // 实现具体操作
+                },
+              ),
+            ],
+          );
+        });
   }
 }
