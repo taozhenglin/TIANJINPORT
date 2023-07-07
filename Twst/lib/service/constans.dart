@@ -64,6 +64,7 @@ class Constants {
   static String LOCATION = "地点：";
   static String BORROW_COUNT = "借用数量：";
   static String BACK_COUNT = "归还数量：";
+  static String WAIT_BACK_COUNT = "待归还数量：";
   static String STORE_ROOM = "库房：";
   static String UNIT_COST = "单位成本：";
   static String UNIT = "单位：";
@@ -109,6 +110,7 @@ class Constants {
   static String WORK_LOAD="负荷：";
   static String MODEL="规格型号：";
   static String STORE_TOTAL="库存总量：";
+  static String UN_BACK_COUNT="未归还数量：";
   static String CURRENT_COUNT="当前剩余：";
   static String CHOOSE_GSJ="选择工属具";
   static String LOGIN_TIME="登录时间";
@@ -119,12 +121,14 @@ static String PLEASE_FILL_IN_THE_REJECTION_CONTENT="请输入驳回原因";
   static String CLOSE_PAGE="CLOSE_PAGE";
   static String COUNT_SHOULD_MORE_THEN_ZERO='数量必须大于 0';
   static String COUNT_SHOULD_NOT_BE_EMPTY="数量不能为空";
+  static String GSL_CJ_LINE="承接明细";
+  static String PLEASE_FILL_IN_NUM_OR_DESC="请输入编号/描述";
 
 
 
 
 
-  static String REFRESH_GSJ="刷新工属具列表";
+      static String REFRESH_GSJ="刷新工属具列表";
   static String REFRESH_GSJ_LOCATION="刷新工属具仓库";
   static String REFRESH_GSJ_BORROW_LIST="刷新工属具借用列表";
   static String REFRESH_GSJ_BACK_LIST="刷新工属具归还列表";
@@ -134,7 +138,7 @@ static String PLEASE_FILL_IN_THE_REJECTION_CONTENT="请输入驳回原因";
   static String GSJ_MODIFY = "1040";
   static String GSJ_CJ_RECORD_LIST = "1003";
   static String GSJ_CJ_LINE_LIST = "1004";
-  static String TASK_LIST = "1005";
+  static String TASK_LIST = "1010";
   static String GSJ_APPROVE__RECORD_LIST = "1006";
   static String GSJ_COMMON_ADD_LIST = "1007";
   static String GSJ_CHOOSE_RECIEVE_LIST ='1008';

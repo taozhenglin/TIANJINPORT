@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:twst/config/textsize.dart';
 import 'package:twst/page/personal.dart';
+import 'package:twst/page/tasklist.dart';
 
 import '../bean/eventbus.dart';
 import '../tools/datautil.dart';
@@ -19,10 +20,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State {
   late bool visiable = true;
-  final pages = [MenuPage(), MsgPage(), PersonPage()];
+  final pages = [MenuPage(), TaskListPage(), PersonPage()];
   String mCount = '';
   getCount() async {
-    String count = await DataUtils.getString('dbnum');
+    String count = await DataUtils.getString('taskcount');
     if (count.isNotEmpty) {
       setState(() {
         if (int.parse(count) > 99) {
@@ -80,7 +81,7 @@ class _HomePageState extends State {
                   if (mCount.isNotEmpty && mCount != "0")
                     Positioned(
                         // top: -5.0,
-                        right: -1,
+                        right: 0,
                         child: Offstage(
                           offstage: false,
                           child: Container(
@@ -98,7 +99,7 @@ class _HomePageState extends State {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: TextSizeConfig.size8,
+                                  fontSize: TextSizeConfig.size10,
                                 ),
                               ),
                             ),

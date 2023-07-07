@@ -26,6 +26,7 @@ class CommonTextInputForm extends StatelessWidget {
   final double? imageSize;
   final String? statue1;
   final String? statue2;
+  final String? from;
 
   const CommonTextInputForm(
       {Key? key, required this.title,
@@ -39,7 +40,7 @@ class CommonTextInputForm extends StatelessWidget {
       this.keyBoardtype,
       required this.hint,
         this.maxvalue,
-        required this.flag,  this.statue1,  this.statue2}) : super(key: key);
+        required this.flag,  this.statue1,  this.statue2, this.from}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +127,7 @@ class CommonTextInputForm extends StatelessWidget {
           ),
           if(flag==1)
           NumChangeWidget(
+            from: from,
             onValueChanged: ( String value) {
             LogD('value=${value}');
             controller.text=value.toString();

@@ -22,7 +22,6 @@ import 'chooserecievebylistpage.dart';
 
 class GsjDetailPage extends StatefulWidget {
   final arguments;
-
   const GsjDetailPage({Key? key, required this.arguments}) : super(key: key);
 
   @override
@@ -235,9 +234,10 @@ class GsjDetailPageState extends State<GsjDetailPage>
                           udissueddate: "",
                           udzydd: "",
                           udzyhl: "");
-                    } else
-                      EasyLoading.showError(
+                    } else {
+                      EasyLoading.showInfo(
                           Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
+                    }
                     return;
                   },
                 ),
@@ -250,7 +250,7 @@ class GsjDetailPageState extends State<GsjDetailPage>
             title: Constants.STOREHOUSE,
             onPressed: () async {
               if (widget.arguments['status'] != Constants.ADD_NEW_ONE) {
-                EasyLoading.showError(
+                EasyLoading.showInfo(
                     Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
                 return;
               }
@@ -283,7 +283,7 @@ class GsjDetailPageState extends State<GsjDetailPage>
             title: Constants.RECIEVE_BY,
             onPressed: () async {
               if (widget.arguments['status'] != Constants.ADD_NEW_ONE) {
-                EasyLoading.showError(
+                EasyLoading.showInfo(
                     Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
                 return;
               }
@@ -316,7 +316,7 @@ class GsjDetailPageState extends State<GsjDetailPage>
             title: Constants.RECIEVE_DATE,
             onPressed: () {
               if (widget.arguments['status'] != Constants.ADD_NEW_ONE) {
-                EasyLoading.showError(
+                EasyLoading.showInfo(
                     Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
                 return;
               }
@@ -379,7 +379,7 @@ class GsjDetailPageState extends State<GsjDetailPage>
             title: Constants.SEND_TO_DATE,
             onPressed: () {
               if (widget.arguments['status'] != Constants.ADD_NEW_ONE) {
-                EasyLoading.showError(
+                EasyLoading.showInfo(
                     Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
                 return;
               }
@@ -440,7 +440,7 @@ class GsjDetailPageState extends State<GsjDetailPage>
             title: Constants.WORK_LOCATION,
             onPressed: () {
               if (widget.arguments['status'] != Constants.ADD_NEW_ONE) {
-                EasyLoading.showError(
+                EasyLoading.showInfo(
                     Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
                 return;
               }

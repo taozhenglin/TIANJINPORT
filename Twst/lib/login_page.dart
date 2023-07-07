@@ -385,7 +385,7 @@ class _LoginPage extends State<LoginPage> {
           DataUtils.setString("loginname", name);
           DataUtils.setString("pwd", pwd);
           DataUtils.setString("udbm", resultMap['msg']['udbm']);
-          DataUtils.setString("dbnum", resultMap['msg']['dbnum']);
+          DataUtils.setString("taskcount", resultMap['msg']['dbnum']);
           DataUtils.setString("siteid", resultMap['msg']['siteid']);
           DataUtils.setString("udbmbm", resultMap['msg']['udbmbm']);
           DataUtils.setString("logintime",

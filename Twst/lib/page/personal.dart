@@ -33,11 +33,11 @@ class _PersonPageState extends State {
 
   late String username = '';
   late String udbm = "";
+  late String udcount='';
   late String phoneNum = "";
   late String _path = '';
   late String _version = '';
   late String logintime='';
-  late String textFont = Constants.REGULAR_SIZE;
 
   @override
   Widget build(BuildContext context) {
@@ -257,7 +257,7 @@ class _PersonPageState extends State {
                         text: '待办',
                         textSize: TextSizeConfig.size14,
                         textColor: Colors.black54,
-                        count: "0",
+                        count: '${udcount}',
                         countSize: TextSizeConfig.size18,
                         countColor: Colors.black,
                         onPressed: () {
@@ -298,7 +298,7 @@ class _PersonPageState extends State {
                             context: this.context);
                       },
                       flag: 1,
-                      note: textFont,
+                      note: Constants.REGULAR_SIZE,
                       color: Colors.orange,
                     ),
                     // CommonMenuItem(
@@ -537,7 +537,7 @@ class _PersonPageState extends State {
                   TextSizeConfig.size16 = 14.0;
                   TextSizeConfig.size18 = 16.0;
                   TextSizeConfig.size20 = 18.0;
-                  textFont = Constants.SMALL_SIZE;
+                  Constants.REGULAR_SIZE = Constants.SMALL_SIZE;
                   Navigator.of(context).pop();
                 });
               },
@@ -557,7 +557,7 @@ class _PersonPageState extends State {
                   TextSizeConfig.size16 = 16.0;
                   TextSizeConfig.size18 = 18.0;
                   TextSizeConfig.size20 = 20.0;
-                  textFont = Constants.REGULAR_SIZE;
+                  Constants.REGULAR_SIZE  = Constants.REGULAR_SIZE;
                   Navigator.of(context).pop();
                 });
               },
@@ -578,7 +578,7 @@ class _PersonPageState extends State {
                   TextSizeConfig.size16 = 18.0;
                   TextSizeConfig.size18 = 20.0;
                   TextSizeConfig.size20 = 22.0;
-                  textFont = Constants.LARGE_SIZE;
+                  Constants.REGULAR_SIZE  = Constants.LARGE_SIZE;
                 }
 
                 );
@@ -602,7 +602,7 @@ class _PersonPageState extends State {
                   TextSizeConfig.size16 = 20.0;
                   TextSizeConfig.size18 = 22.0;
                   TextSizeConfig.size20 = 24.0;
-                  textFont = Constants.BIGEST_SIZE;
+                  Constants.REGULAR_SIZE  = Constants.BIGEST_SIZE;
                   Navigator.of(context).pop();
                 });
               },
@@ -681,6 +681,12 @@ class _PersonPageState extends State {
     setState(() {
       udbm = bm;
     });
+    String count = await DataUtils.getString('taskcount');
+    print("count==${count}");
+    setState(() {
+      udcount = count;
+    });
+
     String phone = await DataUtils.getString("loginname");
     print("phone==${phone}");
     setState(() {
@@ -719,12 +725,12 @@ class _PersonPageState extends State {
         // barrierColor: Color(0xFF1B1B1B),
         builder: (BuildContext context) {
           return CupertinoAlertDialog(
-            title: Image(
+            title: const Image(
               image: AssetImage('images/login_out.png'),
               width: 40,
               height: 40,
             ),
-            content: Text(
+            content: const Text(
               '\n您的账号在另一台设备上登录，\n您已被登出',
               style: TextStyle(
                   fontSize: 15,
@@ -733,7 +739,7 @@ class _PersonPageState extends State {
             actions: <Widget>[
               CupertinoDialogAction(
                 textStyle:
-                TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+                const TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
                 child: Text('确定'),
                 onPressed: () async {
                   Navigator.of(context).pop();

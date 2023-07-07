@@ -45,7 +45,7 @@ class ChooseRecieveByListPageState extends BaseListPageState{
       sql=" and locationsite='${siteid}'";
     }else{
       title = "选择仓库";
-      hint="请输入姓名/id";
+      hint="请输入仓库/id";
       keynum=Constants.GSJ_CHOOSE_STORE_LIST;
       sql="and siteid='${siteid}' and  type='库房' ";
     }
@@ -245,7 +245,7 @@ class ChooseRecieveByListPageState extends BaseListPageState{
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           //姓名
-                          CommonLightTextItem(title: Constants.NO, titlecolor: Colors.black, titleSize: TextSizeConfig.size16, content: agencyList[index]["LOCATION"], contentcolor:  Colors.black, contentSize: TextSizeConfig.size16, searchInput: searchInput),
+                          CommonLightTextItem(title: Constants.STORE_ROOM, titlecolor: Colors.black, titleSize: TextSizeConfig.size16, content: agencyList[index]["LOCATION"], contentcolor:  Colors.black, contentSize: TextSizeConfig.size16, searchInput: searchInput),
                           // CommonTextForm(
                           //     title: Constants.GSJ_DESC,
                           //     titlecolor: Colors.black,

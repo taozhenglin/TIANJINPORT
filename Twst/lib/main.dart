@@ -17,6 +17,8 @@ void main() {
   SystemUiOverlayStyle systemUiOverlayStyle =
       SystemUiOverlayStyle(statusBarColor: Colors.transparent);
   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+  // 不加这个强制横/竖屏会报错
+  WidgetsFlutterBinding.ensureInitialized();
   // 注册服务
   setupLocator();
 }

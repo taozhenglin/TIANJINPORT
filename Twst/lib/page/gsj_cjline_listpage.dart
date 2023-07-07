@@ -36,7 +36,7 @@ class GsjCjLineListPageState extends BaseListPageState {
     // TODO: implement initData
     super.initData();
     name = await DataUtils.getString("loginname");
-    title = "承接明细";
+    title = Constants.GSL_CJ_LINE;
     showSearchBar = false;
   }
 

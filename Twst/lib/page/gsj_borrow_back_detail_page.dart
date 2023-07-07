@@ -18,8 +18,7 @@ import 'gsj_detail_page.dart';
 
 class GsjBorrowBackDetailPage extends StatefulWidget {
   final arguments;
-
-  const GsjBorrowBackDetailPage({Key? key, required this.arguments})
+  const GsjBorrowBackDetailPage({Key? key,  this.arguments,})
       : super(key: key);
 
   @override
@@ -31,53 +30,17 @@ class GsjBorrowBackDetailPageState extends State<GsjBorrowBackDetailPage>
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
-  late List<TabData> datas;
+  late List<TabData> datas=[];
   late String name;
   late List<Map> list = [];
+  List agencyList = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    LogD('arguments==${widget.arguments['data']}');
-
-    datas = <TabData>[
-      TabData(
-          title: Constants.DETAIL,
-          route: '',
-          widget: GsjDetailPage(
-            arguments: widget.arguments['data'],
-          )),
-      TabData(
-          title: Constants.GSJ_BORROW,
-          route: '',
-          widget: GsjDetailBorrowPage(
-            num: widget.arguments['data']['num'],
-            location: widget.arguments['data']['fromstoreloc'],
-            statue: widget.arguments['data']['status'],
-          )),
-      TabData(
-          title: Constants.GSJ_BACK,
-          route: '',
-          widget: GsjDetailBackPage(
-            num: widget.arguments['data']['num'],
-            location: widget.arguments['data']['fromstoreloc'],
-            statue: widget.arguments['data']['status'],
-          )),
-      TabData(
-          title: Constants.GSJ_CJ_RECORD,
-          route: '',
-          widget: GsjCjRecordPage(
-            num: widget.arguments['data']['num'],
-          )),
-      TabData(
-          title: Constants.GSJ_APPROVE_LIST,
-          route: '',
-          widget: GsjApprovePage(
-            num: widget.arguments['data']['num'],
-            ownerId: widget.arguments['data']['ownerId'],
-          )),
-    ];
+    LogD('arguments data==${widget.arguments['data']}');
+    LogD('arguments from==${widget.arguments['from']}');
     initData();
   }
 
@@ -258,6 +221,51 @@ class GsjBorrowBackDetailPageState extends State<GsjBorrowBackDetailPage>
   Future<void> initData() async {
     //登陆手机号
     name = await DataUtils.getString("loginname");
+    if(widget.arguments['from']=="task"){
+      getData();
+    }else{
+LogD('------------------------------');
+setState(() {
+  datas = <TabData>[
+    TabData(
+        title: Constants.DETAIL,
+        route: '',
+        widget: GsjDetailPage(
+          arguments: widget.arguments['data'],
+        )),
+    TabData(
+        title: Constants.GSJ_BORROW,
+        route: '',
+        widget: GsjDetailBorrowPage(
+          num: widget.arguments['data']['num'],
+          location: widget.arguments['data']['fromstoreloc'],
+          statue: widget.arguments['data']['status'],
+        )),
+    TabData(
+        title: Constants.GSJ_BACK,
+        route: '',
+        widget: GsjDetailBackPage(
+          num: widget.arguments['data']['num'],
+          location: widget.arguments['data']['fromstoreloc'],
+          statue: widget.arguments['data']['status'],
+        )),
+    TabData(
+        title: Constants.GSJ_CJ_RECORD,
+        route: '',
+        widget: GsjCjRecordPage(
+          num: widget.arguments['data']['num'],
+        )),
+    TabData(
+        title: Constants.GSJ_APPROVE_LIST,
+        route: '',
+        widget: GsjApprovePage(
+          num: widget.arguments['data']['num'],
+          ownerId: widget.arguments['data']['ownerId'],
+        )),
+  ];
+});
+
+    }
   }
 
   Future<int> getGsjBorrowCount() async {
@@ -291,5 +299,94 @@ class GsjBorrowBackDetailPageState extends State<GsjBorrowBackDetailPage>
     return 0;
 
     }
+  }
+
+  getData() async {
+    DiaLogUtil.show(context, Colors.black12, "加载中...");
+    String option = Constants.READ;
+    Map map = {
+      "keyNum": Constants.GSJ_LIST,
+      "sqlWhere": " and udinvuseid='${widget.arguments['data']['tzownerid']}' ",
+      "sinorSearch": '',
+      "startRow": Constants.START_PAGE,
+      "endRow": Constants.END_PAGE
+    };
+    try {
+      Map<String, dynamic> resultMap =
+          await DioClient.DioPost('${name}', option, map);
+      if (resultMap['code'] == Constants.CODE_OK) {
+        // DiaLogUtil.disMiss(context);
+        Constants.ISNETWORKAVAILABLE = true;
+        List _agencyList = resultMap['msg'];
+        int total = int.parse(resultMap['total']);
+        DiaLogUtil.disMiss(context);
+        if (mounted) {
+          setState(() {
+            if (total > 0) {
+              //有数据
+              if (_agencyList.isNotEmpty) {
+                //下拉刷新
+                widget.arguments['data'] = _agencyList[0];
+                datas = <TabData>[
+                  TabData(
+                      title: Constants.DETAIL,
+                      route: '',
+                      widget: GsjDetailPage(
+                        arguments: widget.arguments['data'],
+                      )),
+                  TabData(
+                      title: Constants.GSJ_BORROW,
+                      route: '',
+                      widget: GsjDetailBorrowPage(
+                        num: widget.arguments['data']['num'],
+                        location: widget.arguments['data']['fromstoreloc'],
+                        statue: widget.arguments['data']['status'],
+                      )),
+                  TabData(
+                      title: Constants.GSJ_BACK,
+                      route: '',
+                      widget: GsjDetailBackPage(
+                        num: widget.arguments['data']['num'],
+                        location: widget.arguments['data']['fromstoreloc'],
+                        statue: widget.arguments['data']['status'],
+                      )),
+                  TabData(
+                      title: Constants.GSJ_CJ_RECORD,
+                      route: '',
+                      widget: GsjCjRecordPage(
+                        num: widget.arguments['data']['num'],
+                      )),
+                  TabData(
+                      title: Constants.GSJ_APPROVE_LIST,
+                      route: '',
+                      widget: GsjApprovePage(
+                        num: widget.arguments['data']['num'],
+                        ownerId: widget.arguments['data']['ownerId'],
+                      )),
+                ];
+
+              } else {
+                // ToastUtils.shotToast(Constants.NO_MORE_DATA);
+                print("_agencyList.isEmpty");
+                EasyLoading.showToast(Constants.NO_MORE_DATA);
+                // refreshController.loadNoData();
+              }
+            } else {
+              // ToastUtils.shotToast(Constants.NO_DATA);
+            }
+          });
+        }
+      } else {
+        DiaLogUtil.disMiss(context);
+        EasyLoading.showToast(resultMap['msg']);
+
+      }
+    } catch (e) {
+      LogE(e.toString());
+      DiaLogUtil.disMiss(context);
+      setState(() {
+      });
+    }
+
   }
 }

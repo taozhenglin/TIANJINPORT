@@ -344,11 +344,14 @@ class GsjCommonAddPageState extends State<GsjCommonAddPage> {
                                 if(from=="borrow")
                                 "QUANTITY":bean['uddqsyqty'],
                                 if(from=="back")
-                                  "QUANTITY":bean['quantity'],
+                                  "UDJYID":bean['udyjid'],
+                                if(from=="back")
+                                  "QUANTITY":bean['udwghqty'],
                                 if(from=="back")
                                   "UDINVUSELINENUM":bean['udinvuselinenum'],
-                                if(from=="back")
-                                  "UDJYID":bean['udjyid']
+                                // if(from=="back")
+                                //   "UDWGHQTY":bean['udwghqty'],
+
                               };
                               _list.remove(map);
                             } else {
@@ -364,11 +367,14 @@ class GsjCommonAddPageState extends State<GsjCommonAddPage> {
                                 if(from=="borrow")
                                   "QUANTITY":bean['uddqsyqty'],
                                 if(from=="back")
-                                  "QUANTITY":bean['quantity'],
+                                  "UDJYID":bean['udyjid'],
+                                if(from=="back")
+                                  "QUANTITY":bean['udwghqty'],
                                 if(from=="back")
                                   "UDINVUSELINENUM":bean['udinvuselinenum'],
-                                if(from=="back")
-                                  "UDJYID":bean['udjyid']
+                                // if(from=="back")
+                                //   "UDWGHQTY":bean['udwghqty'],
+
                               };
                               _list.add(map);
                             }
@@ -606,6 +612,14 @@ class GsjCommonAddPageState extends State<GsjCommonAddPage> {
                                   )
                                 ],
                               ),
+                              if(from=="back")
+                                CommonTextForm(
+                                    title: Constants.UN_BACK_COUNT,
+                                    titlecolor: Colors.black,
+                                    titleSize: TextSizeConfig.size16,
+                                    content: bean["udwghqty"],
+                                    contentcolor: Colors.black,
+                                    contentSize: TextSizeConfig.size16),
                             ],
                           ),
                         ),
@@ -682,11 +696,14 @@ class GsjCommonAddPageState extends State<GsjCommonAddPage> {
           if(from=="borrow")
             "QUANTITY":element['uddqsyqty'],
           if(from=="back")
-            "QUANTITY":element['quantity'],
+            "UDJYID":element['udyjid'],
+          if(from=="back")
+            "QUANTITY":element['udwghqty'],
           if(from=="back")
             "UDINVUSELINENUM":element['udinvuselinenum'],
-          if(from=="back")
-          "UDJYID":element['udjyid']
+          // if(from=="back")
+          //   "UDWGHQTY":element['udwghqty'],
+
         };
         _list.add(map);
 
@@ -724,6 +741,7 @@ class GsjCommonAddPageState extends State<GsjCommonAddPage> {
     try {
       Map<String, dynamic> resultMap =
           await DioClient.DioPost('${name}', option, map);
+      LogD(map.toString());
       if (resultMap['code'] == Constants.CODE_OK) {
         DiaLogUtil.disMiss(context);
         EasyLoading.showSuccess(resultMap['msg']);

@@ -1,47 +1,45 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:twst/base/baselist_page.dart';
-import 'package:twst/bean/eventbus.dart';
-import 'package:twst/service/constans.dart';
-import 'package:twst/service/dioclent.dart';
-import 'package:twst/tools/datautil.dart';
-import 'package:twst/tools/hightutils.dart';
-import 'package:twst/tools/logutils.dart';
-import 'package:twst/view/common_icontext_item.dart';
-import 'package:twst/view/common_search_bar.dart';
 
+import '../bean/eventbus.dart';
 import '../config/textsize.dart';
-import '../main.dart';
+import '../service/constans.dart';
+import '../service/dioclent.dart';
+import '../tools/datautil.dart';
 import '../tools/dialogutil.dart';
-import '../view/animationwg.dart';
+import '../tools/hightutils.dart';
+import '../view/common_icontext_item.dart';
+import 'msg.dart';
 
-class MsgPage extends BaseListPage {
+class TaskListPage extends BaseListPage{
   @override
-  BaseListPageState  createState() {
+  BaseListPageState createState() {
     // TODO: implement createState
-    return _MsgPageState();
+    return TaskListState();
   }
 }
 
-class _MsgPageState extends BaseListPageState {
+class TaskListState extends BaseListPageState{
   List agencyList = [];
   late String name;
-
-
   @override
   void initState() {
+    // TODO: implement initState
+    super.initState();
     Future.delayed(Duration(microseconds: 300),(){
       getTaskList(true, "");
-    });
-  }
+    });  }
+
   @override
   Future<void> initData() async {
     // TODO: implement initData
     super.initData();
-    name = await DataUtils.getString("loginname");
-    LogD('name=$name');
+   String  username = await DataUtils.getString("loginname");
+   setState(() {
+     name=username;
+     hint=Constants.PLEASE_FILL_IN_NUM_OR_DESC;
+   });
 
   }
   @override
@@ -84,7 +82,7 @@ class _MsgPageState extends BaseListPageState {
     Map mapJaon = {
       "keyNum": Constants.TASK_LIST,
       "sqlWhere":
-          " and assignstatus='${sqlWhere}'  and processname='UDGSJJYGH' and assigncode='${name}' ",
+      " and assignstatus='${sqlWhere}'  and processname='UDGSJJYGH' and assigncode='${name}' ",
       "sinorSearch":"",
       "startRow":startPage,
       "endRow":endPage,
@@ -152,7 +150,6 @@ class _MsgPageState extends BaseListPageState {
 
     // setState(() {});
   }
-
   listbuilder() {
     // return ListView.builder(
     //   // physics: const ClampingScrollPhysics(),
@@ -162,128 +159,79 @@ class _MsgPageState extends BaseListPageState {
     //   itemCount: agencyList.length,
     // );
     return
-        ListView.builder(
-          itemCount: agencyList.length,
-          itemBuilder: (BuildContext context, int index) {
-                  return buildContainer(agencyList[index], searchInput);
-                  // child: MsgItem(index: index, bean: agencyList[index], input: searchInput),
+      ListView.builder(
+        itemCount: agencyList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            padding: EdgeInsets.all(5),
+            child: InkWell(
+              onTap: () {
 
-
-
-          },
-        );
-
-
-  }
-
-  void finishRefresh(bool refresh) {
-    if (refresh) {
-      refreshController.refreshCompleted();
-    } else {
-      refreshController.loadComplete();
-    }
-  }
-
-  void hidekeybord() {
-    FocusScopeNode currentFocus = FocusScope.of(context);
-    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
-      FocusManager.instance.primaryFocus!.unfocus();
-    }
-  }
-
-
-}
-
-class MsgItem extends StatelessWidget {
-  final int index;
-  var bean;
-  String input;
-  MsgItem(
-      {Key? key, required this.index, required this.bean, required this.input})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    double top = index == 0 ? 10 : 0;
-    return Container(
-      // padding: EdgeInsets.only(top: top, bottom: 0),
-      child: buildAnimationWidget(bean, input),
-    );
-  }
-
-  AnimationWdiget buildAnimationWidget(bean, String input) {
-    return AnimationWdiget(
-      flag: 1,
-      duration: 400 + index % 3 * 100,
-      child: buildContainer(bean, input),
-    );
-  }
-
-  Container buildContainer(bean, String input) {
-    return Container(
-      padding: EdgeInsets.all(5),
-      child: InkWell(
-        onTap: () {
-          // Navigator.pushNamed(
-          //     navigatorKey.currentState.overlay.context, '/test');
-        },
-        child: Card(
-          elevation: 3,
-          margin: EdgeInsets.all(3),
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: LightText(
-                    text: bean["ownerTable"],
-                    lightText: input,
-                    textStyle: TextStyle(
-                        fontSize: TextSizeConfig.size16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
-                    lightStyle: TextStyle(
-                      fontSize: TextSizeConfig.size18,
-                      color: Colors.tealAccent,
-                    ),
+                Navigator.of(context).pushNamed('/gsj_borrow_back_detail',
+                    arguments: {"data": agencyList[index],"from":"task"});
+                // Navigator.pushNamed(
+                //     navigatorKey.currentState.overlay.context, '/test');
+              },
+              child: Card(
+                elevation: 3,
+                margin: EdgeInsets.all(3),
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        alignment: Alignment.topLeft,
+                        child: LightText(
+                          text: agencyList[index]["app"],
+                          lightText: searchInput,
+                          textStyle: TextStyle(
+                              fontSize: TextSizeConfig.size16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                          lightStyle: TextStyle(
+                            fontSize: TextSizeConfig.size18,
+                            color: Colors.tealAccent,
+                          ),
+                        ),
+                      ),
+                      LightText(
+                          text: agencyList[index]["description"],
+                          lightText: searchInput,
+                          textStyle: TextStyle(
+                            fontSize: TextSizeConfig.size16,
+                            color: Colors.black45,
+                          ),
+                          lightStyle: TextStyle(
+                              fontSize: TextSizeConfig.size18,
+                              color: Colors.tealAccent)),
+                      CommonIconTextItem(
+                        icon: Icons.access_time,
+                        text: agencyList[index]["startdate"],
+                        imagecolor: Colors.orange,
+                        onPressed: () {},
+                        textSize: TextSizeConfig.size16,
+                        imageSize: 18,
+                        textcolor: Colors.grey,
+                      ),
+                    ],
                   ),
                 ),
-                LightText(
-                    text: bean["description"],
-                    lightText: input,
-                    textStyle: TextStyle(
-                      fontSize: TextSizeConfig.size16,
-                      color: Colors.black45,
-                    ),
-                    lightStyle: TextStyle(
-                        fontSize: TextSizeConfig.size18,
-                        color: Colors.tealAccent)),
-                CommonIconTextItem(
-                  icon: Icons.access_time,
-                  text: bean["startdate"],
-                  imagecolor: Colors.orange,
-                  onPressed: () {},
-                  textSize: TextSizeConfig.size16,
-                  imageSize: 18,
-                  textcolor: Colors.grey,
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-  // fun( bean) {
-  //   print('bean==$bean');
-  //
-  // }
-}
+          );
+          // child: MsgItem(index: index, bean: agencyList[index], input: searchInput),
 
+
+
+        },
+      );
+
+
+  }
+
+}
 Container buildContainer(bean, String input) {
   return Container(
     padding: EdgeInsets.all(5),
@@ -342,3 +290,4 @@ Container buildContainer(bean, String input) {
     ),
   );
 }
+

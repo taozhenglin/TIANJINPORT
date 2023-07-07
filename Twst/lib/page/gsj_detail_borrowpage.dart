@@ -235,6 +235,7 @@ class GsjDetailBorrowPageState extends BaseListFragmentWithFlbState {
                             contentSize: TextSizeConfig.size16),
                         //借用数量
                         CommonTextInputForm(
+                          from: "borrow",
                           title: Constants.BORROW_COUNT,
                           titlecolor: Colors.black,
                           titleSize: TextSizeConfig.size16,

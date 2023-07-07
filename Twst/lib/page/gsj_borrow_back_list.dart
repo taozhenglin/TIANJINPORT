@@ -91,7 +91,6 @@ class GsjBorrowBackListState extends BaseListPageWithFlbState {
   listbuilder() {
     // TODO: implement listbuilder
     return ListView.builder(
-
         itemCount: agencyList.length,
         itemBuilder: (BuildContext context, int index) {
           return AnimationConfiguration.staggeredList(
@@ -102,7 +101,6 @@ class GsjBorrowBackListState extends BaseListPageWithFlbState {
             verticalOffset: 50,
             //渐显
             child: FadeInAnimation(
-
               child:  Stack(
                 children: [
                   Card(
@@ -110,7 +108,7 @@ class GsjBorrowBackListState extends BaseListPageWithFlbState {
                     child: InkWell(
                       onTap: () {
                         Navigator.of(context).pushNamed('/gsj_borrow_back_detail',
-                            arguments: {"data": agencyList[index]});
+                            arguments: {"data": agencyList[index],"from":"list"});
                       },
                       child: Padding(
                         padding: EdgeInsets.all(10),

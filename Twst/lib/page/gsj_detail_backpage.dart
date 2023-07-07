@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -25,12 +26,14 @@ class GsjDetailBackPage extends BaseListFragmentWithFlb {
   final num;
   final location;
   final statue;
-  GsjDetailBackPage( {Key? key, this.location,required this.num, required this.statue});
+
+  GsjDetailBackPage(
+      {Key? key, this.location, required this.num, required this.statue});
 
   @override
   BaseListFragmentWithFlbState createState() {
     // TODO: implement createState
-    return GsjDetailBackPageState(num,location,statue);
+    return GsjDetailBackPageState(num, location, statue);
   }
 }
 
@@ -38,12 +41,13 @@ class GsjDetailBackPageState extends BaseListFragmentWithFlbState {
   List<Map> list = [];
   List agencyList = [];
   late String name;
-  late String num;
+  late String no='';
   late String location;
   late String statue;
   var listen;
 
-  GsjDetailBackPageState(this.num, this.location, this.statue);
+  GsjDetailBackPageState(this.no, this.location, this.statue);
+
   @override
   void onRefresh() {
     // TODO: implement onRefresh
@@ -62,11 +66,11 @@ class GsjDetailBackPageState extends BaseListFragmentWithFlbState {
   void initState() {
     // TODO: implement initState
     super.initState();
-    LogD('num=${num}');
+    LogD('num=${no}');
     listen = eventBus.on<EventA>().listen((event) {
       print("接受到刷新${event.str}");
       if (event.str.isNotEmpty) {
-        if(event.str==Constants.REFRESH_GSJ_BACK_LIST){
+        if (event.str == Constants.REFRESH_GSJ_BACK_LIST) {
           getGsjList(true);
         }
       }
@@ -74,11 +78,10 @@ class GsjDetailBackPageState extends BaseListFragmentWithFlbState {
     listen = eventBus.on<EventC>().listen((event) {
       print("接受到刷新${event.str}");
       if (event.str.isNotEmpty) {
-        if(event.str==Constants.REFRESH_GSJ_LOCATION){
+        if (event.str == Constants.REFRESH_GSJ_LOCATION) {
           setState(() {
-            location=event.content;
+            location = event.content;
           });
-
         }
       }
     });
@@ -105,7 +108,7 @@ class GsjDetailBackPageState extends BaseListFragmentWithFlbState {
     String option = Constants.READ;
     Map json = {
       "keyNum": Constants.GSJ_BORROW_BACK_LIST,
-      "sqlWhere": " and UDINVUSENUM='${num}' and USETYPE='UDGH'",
+      "sqlWhere": " and UDINVUSENUM='${no}' and USETYPE='UDGH'",
       "sinorSearch": '',
       "keysearch": "keyValue:1",
       "startRow": startPage,
@@ -239,44 +242,113 @@ class GsjDetailBackPageState extends BaseListFragmentWithFlbState {
                             content: agencyList[index]["binname"],
                             contentcolor: Colors.black,
                             contentSize: TextSizeConfig.size16),
+                        //待归还数量
+                        // CommonTextForm(
+                        //     title: Constants.WAIT_BACK_COUNT,
+                        //     titlecolor: Colors.black,
+                        //     titleSize: TextSizeConfig.size16,
+                        //     content: agencyList[index]["quantity"],
+                        //     contentcolor: Colors.black,
+                        //     contentSize: TextSizeConfig.size16),
 
                         //归还数量
                         CommonTextInputForm(
+                          from: "back",
                           title: Constants.BACK_COUNT,
                           titlecolor: Colors.black,
                           titleSize: TextSizeConfig.size16,
                           imageSize: 25,
-                          content: agencyList[index]["quantity"],
+                          content: agencyList[index]["quantity"].toString().isNotEmpty ?agencyList[index]["quantity"]:"0.0" ,
                           keyBoardtype: TextInputType.number,
-                          maxvalue: agencyList[index]["uddqsyqty"],
+                          maxvalue: agencyList[index]["quantity"].toString().isNotEmpty ?agencyList[index]["quantity"]:"0.0",
                           hint: '请输入归还数量',
+                          statue1: statue,
+                          statue2: agencyList[index]['status'],
                           callback: (s) {
-                            //主表带归还/部分归还/驳回
-                            if (statue == Constants.WAIT_TO_BACK||statue == Constants.PART_OF_BACK|| statue == Constants.REJECTED) {
+                            //主表待归还/部分归还/驳回
+                            if (statue == Constants.WAIT_TO_BACK ||
+                                statue == Constants.PART_OF_BACK ||
+                                statue == Constants.REJECTED) {
                               //子表等待检查
-                              if (agencyList[index]['status'] == Constants.WAIT_CHECK) {
+                              if (agencyList[index]['status'] ==
+                                  Constants.WAIT_CHECK) {
                                 if (s.isEmpty) {
                                   EasyLoading.showInfo('请输入归还数量');
                                   return;
-                                } else
-                                  modfy(s, agencyList[index]['udyjid']);
+                                } else   if(num.parse(s)<=0){
+                                  EasyLoading.showInfo(Constants.COUNT_SHOULD_MORE_THEN_ZERO);
+                                }else
+                                  modfy(s, agencyList[index]['udyjid'],1);
                               } else {
-                                EasyLoading.showInfo(Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
+                                EasyLoading.showInfo(
+                                    Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
                               }
                             } else {
-                              EasyLoading.showInfo(Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
+                              EasyLoading.showInfo(
+                                  Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
                             }
-                          }, flag: 2,
+                          },
+                          flag: 1,
                         ),
 
                         //发放单位
-                        CommonTextForm(
-                            title: Constants.FF_DEPT,
-                            titlecolor: Colors.black,
-                            titleSize: TextSizeConfig.size16,
-                            content: agencyList[index]["uddw"],
-                            contentcolor: Colors.black,
-                            contentSize: TextSizeConfig.size16),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CommonTextForm(
+                                  title: Constants.FF_DEPT,
+                                  titlecolor: Colors.black,
+                                  titleSize: TextSizeConfig.size16,
+                                  content: agencyList[index]["uddw"],
+                                  contentcolor: Colors.black,
+                                  contentSize: TextSizeConfig.size16),
+                            ),
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Text('是否检查：',style: TextStyle(fontSize: TextSizeConfig.size16),),
+                                  Switch(
+                                    trackColor:
+                                        MaterialStateProperty.all(Colors.black38),
+                                    activeColor: Colors.green,
+                                    inactiveThumbColor: Colors.grey.withOpacity(0.8),
+// when the switch is on, this image will be displayed
+//                               activeThumbImage:
+//                                   const AssetImage('assets/happy_emoji.png'),
+// // when the switch is off, this image will be displayed
+//                               inactiveThumbImage:
+//                                   const AssetImage('assets/sad_emoji.png'),
+                                    value: agencyList[index]['udsfjc']=="Y" ? true:false,
+                                    onChanged: (value) {
+                                        LogD('value=${value}');
+                                        //主表待归还/部分归还/驳回
+                                        if (statue == Constants.WAIT_TO_BACK ||
+                                            statue == Constants.PART_OF_BACK ||
+                                            statue == Constants.REJECTED) {
+                                          //子表等待检查
+                                          if (agencyList[index]['status'] ==
+                                              Constants.WAIT_CHECK) {
+                                            setState(() {
+                                              modfy(value==true?"Y":"N", agencyList[index]['udyjid'],2);
+
+                                            });
+                                          }else {
+                                            EasyLoading.showInfo(
+                                                Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
+                                          }}
+                                        else {
+                                          EasyLoading.showInfo(
+                                            Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
+                                        }
+
+
+                                  },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                         //单位成本
                         CommonTextForm(
                             title: Constants.UNIT_COST,
@@ -291,7 +363,7 @@ class GsjDetailBackPageState extends BaseListFragmentWithFlbState {
                             title: Constants.LINE_COST,
                             titlecolor: Colors.black,
                             titleSize: TextSizeConfig.size16,
-                              content: agencyList[index]["linecost"],
+                            content: agencyList[index]["linecost"],
                             contentcolor: Colors.black,
                             contentSize: TextSizeConfig.size16),
                         //创建日期
@@ -316,33 +388,44 @@ class GsjDetailBackPageState extends BaseListFragmentWithFlbState {
                         size: TextSizeConfig.size70,
                       ))),
               Positioned(
-
                   bottom: 0,
                   child: Align(
                     alignment: Alignment.bottomRight,
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: IconButton(onPressed: () {
-                        //主表 待归还/部份归还/驳回
-                        if (statue == Constants.WAIT_TO_BACK|| statue ==Constants.PART_OF_BACK|| statue == Constants.REJECTED) {
-                          //子表 等待检查
-                          if (agencyList[index]['status'] == Constants.WAIT_CHECK) {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return CommonDialog(
-                                    onPressed: () {
-                                      Navigator.of(context).pop("yes");
-                                      removeItem(agencyList[index]['udyjid']);
-                                    },  warm: Constants.SURE_DELETE,
-                                  );
-                                });
-                          }else{
-                            EasyLoading.showInfo(Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
-                          }
-                        }else
-                          EasyLoading.showInfo(Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
-                      }, icon: const Icon(Icons.delete,size: 40,color: Colors.black54,),
+                      child: IconButton(
+                        onPressed: () {
+                          //主表 待归还/部份归还/驳回
+                          if (statue == Constants.WAIT_TO_BACK ||
+                              statue == Constants.PART_OF_BACK ||
+                              statue == Constants.REJECTED) {
+                            //子表 等待检查
+                            if (agencyList[index]['status'] ==
+                                Constants.WAIT_CHECK) {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CommonDialog(
+                                      onPressed: () {
+                                        Navigator.of(context).pop("yes");
+                                        removeItem(agencyList[index]['udyjid']);
+                                      },
+                                      warm: Constants.SURE_DELETE,
+                                    );
+                                  });
+                            } else {
+                              EasyLoading.showInfo(
+                                  Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
+                            }
+                          } else
+                            EasyLoading.showInfo(
+                                Constants.CURRENT_STATUE_COUND_NOT_OPERATE);
+                        },
+                        icon: const Icon(
+                          Icons.delete,
+                          size: 40,
+                          color: Colors.black54,
+                        ),
                       ),
                     ),
                   ))
@@ -350,21 +433,25 @@ class GsjDetailBackPageState extends BaseListFragmentWithFlbState {
           );
         });
   }
+
   @override
   add() {
     // TODO: implement add
     //待归还 驳回
-    if (statue == Constants.WAIT_TO_BACK || statue ==Constants.PART_OF_BACK || statue == Constants.REJECTED) {
+    if (statue == Constants.WAIT_TO_BACK ||
+        statue == Constants.PART_OF_BACK ||
+        statue == Constants.REJECTED) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => GsjCommonAddPage(
-            num:num,
-            location: location,
-            from: "back",
-          )));
+                num: no,
+                location: location,
+                from: "back",
+              )));
       return;
     } else
       EasyLoading.showInfo('非 待归还/驳回 状态下无法新增');
   }
+
   Future<void> removeItem(id) async {
     DiaLogUtil.show(context, Colors.black12, "加载中...");
     String option = Constants.DELETE;
@@ -377,7 +464,7 @@ class GsjDetailBackPageState extends BaseListFragmentWithFlbState {
 
     try {
       Map<String, dynamic> resultMap =
-      await DioClient.DioPost2('${name}', option, list);
+          await DioClient.DioPost2('${name}', option, list);
       if (resultMap['code'] == Constants.CODE_OK) {
         DiaLogUtil.disMiss(context);
         EasyLoading.showSuccess(resultMap['msg']);
@@ -393,7 +480,8 @@ class GsjDetailBackPageState extends BaseListFragmentWithFlbState {
       DiaLogUtil.disMiss(context);
     }
   }
-  Future<void> modfy(String s, String id) async {
+
+  Future<void> modfy(String s, String id,int flag) async {
     list.clear();
     DiaLogUtil.show(context, Colors.black12, "加载中...");
     String option = Constants.MODIFY;
@@ -401,12 +489,16 @@ class GsjDetailBackPageState extends BaseListFragmentWithFlbState {
       "objectName": "UDINVUSELINE",
       "keyName": "UDINVUSELINEID",
       "keyValue": id,
-      "QUANTITY":s,
+      if(flag==1)
+      "QUANTITY": s,
+      if(flag==2)
+        "UDSFJC": s,
+
     };
     list.add(map);
     try {
       Map<String, dynamic> resultMap =
-      await DioClient.DioPost2('${name}', option, list);
+          await DioClient.DioPost2('${name}', option, list);
       if (resultMap['code'] == Constants.CODE_OK) {
         getGsjList(true);
         DiaLogUtil.disMiss(context);

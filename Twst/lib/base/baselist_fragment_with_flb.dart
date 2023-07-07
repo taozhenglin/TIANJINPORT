@@ -59,6 +59,7 @@ class BaseListFragmentWithFlbState  extends State<BaseListFragmentWithFlb> with 
         ],
       ),
       floatingActionButton  : Container(
+        margin: EdgeInsets.only(right: 30),
         width: 60,
           height: 60,
         child: FloatingActionButton(
